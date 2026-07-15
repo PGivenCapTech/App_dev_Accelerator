@@ -1,0 +1,25 @@
+{
+  "name": "app-dev-accelerator",
+  "version": "0.1.0",
+  "description": "Feature-driven development team with test-first methodology. SM/Igor/Paul/Dmitri collaborate through /plan, /test-and-build, /deploy, /release. Enforces 100% traceability + coverage. Consumes DiscoveryAccelerator output via /ingest.",
+  "author": "CapTech",
+  "skills": [
+    "plan",
+    "test-and-build",
+    "deploy",
+    "release",
+    "ingest",
+    "challenge"
+  ],
+  "agents": [
+    "sm-scrummaster",
+    "igor-product-owner",
+    "paul-tester",
+    "dmitri-developer",
+    "ingest-bootstrap"
+  ],
+  "upstream": {
+    "requires": "discovery-accelerator",
+    "connection": "/ingest links to DiscoveryAccelerator output directory or git URL"
+  }
+}
