@@ -1,9 +1,10 @@
 {
   "name": "app-dev-accelerator",
-  "version": "0.2.0",
-  "description": "XP + BDD + FDD development team. Workflows: /new-feature, /fix-defect, /refactor. Loops: /refine, /spike, /design, /test-and-develop, /deploy-and-validate, /release. Connection: /ingest, /challenge. Enforces 100% traceability + coverage.",
+  "version": "0.3.0",
+  "description": "XP + BDD + FDD development team. Workflows: /new-feature, /fix-defect, /refactor. Loops: /refine, /spike, /design, /test-and-develop, /deploy-and-validate, /release. Setup: /bootstrap, /initiate. Connection: /ingest, /challenge. Enforces 100% traceability + coverage. Supports Claude Code + Copilot.",
   "author": "CapTech",
   "skills": [
+    "bootstrap",
     "initiate",
     "refine",
     "spike",

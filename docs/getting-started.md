@@ -64,7 +64,37 @@ Both tools read the same `docs/` directory — the quality gates, SDLC defaults,
 
 ## Your First Session
 
-The steps below are the same regardless of tool. The invocation syntax differs:
+### Step 0: Bootstrap Your Team Project
+
+**This is the first thing you do.** Bootstrap creates your team's project repo that inherits from the accelerator:
+
+```bash
+# Claude Code
+/bootstrap
+
+# Copilot Chat
+@workspace "Bootstrap a new team project"
+
+# Copilot CLI
+gh copilot chat --prompt-file .github/prompts/bootstrap.prompt.md
+```
+
+SM will ask:
+1. Project name?
+2. Where to create it?
+3. Create a GitHub repo?
+4. Discovery Accelerator output location?
+5. Which AI tool? (Claude Code / Copilot / Both)
+
+**What gets created:** A new repo with the accelerator as a submodule, symlinked skills/prompts, team-owned DoR/DoD, and empty engagement context ready for `/initiate`.
+
+After bootstrap, **work in your new team project** (not in the accelerator repo):
+
+```bash
+cd ~/projects/<your-project-name>
+```
+
+### Command Reference (Within Your Team Project)
 
 | Step | Claude Code | Copilot Chat |
 |---|---|---|
