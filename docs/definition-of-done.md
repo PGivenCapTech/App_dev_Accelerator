@@ -91,6 +91,33 @@ These scripts run:
 - As a gate before environment promotion
 - SM runs manually before authorizing release
 
+## SDLC-Derived Criteria
+
+_These are added automatically when `/initiate` captures client SDLC controls. Each maps a client process requirement into a completion check._
+
+When `docs/engagement/sdlc-controls.md` is populated, SM derives additional criteria from:
+
+| Client SDLC Area | Derived DoD Criterion |
+|---|---|
+| **PR review requirements** | PR approved by required reviewers before merge |
+| **Security gates** | AppSec review completed and signed off (if feature touches auth/data) |
+| **Change management** | CAB approval obtained (if required for target environment) |
+| **Code signing** | Artifacts signed per client policy |
+| **Static analysis** | Client's SAST tool passes with zero findings above threshold |
+| **Dependency scanning** | No new high/critical vulnerabilities in dependencies |
+| **Documentation standards** | Client-required documentation updated (runbooks, wiki, ADRs) |
+| **Release approval** | Named release authority has signed off |
+
+**How this works:**
+1. User provides SDLC controls via `/initiate`
+2. SM reads `docs/engagement/sdlc-controls.md`
+3. SM adds applicable criteria to the table below
+4. From that point forward, `/deploy-and-validate` and `/release` enforce them
+
+| # | SDLC-Derived Criterion | Source | Verification | Added |
+|---|---|---|---|---|
+| | | | | |
+
 ## Engagement-Specific Criteria
 
 _User: add your additional Done criteria below. Each becomes mandatory for all iterations._

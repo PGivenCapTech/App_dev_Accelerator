@@ -146,9 +146,13 @@ The User is the navigator — present at every pairing cycle AND at workflow gat
 4. `/release` production → **User: "Go live?"**
 5. `/release` feedback → **User: "Here's what I'd adjust..."**
 
+## Definition of Ready (Authoritative: `docs/definition-of-ready.md`)
+
+The full Definition of Ready is maintained in `docs/definition-of-ready.md`. It gates what ENTERS development — nothing proceeds to `/design` or `/test-and-develop` unless it passes. Enhanced automatically by client SDLC controls when `/initiate` captures them.
+
 ## Definition of Done (Authoritative: `docs/definition-of-done.md`)
 
-The full Definition of Done is maintained in `docs/definition-of-done.md` — that file is the single source of truth. Users can enhance it with engagement-specific criteria. Summary of core (non-negotiable) criteria:
+The full Definition of Done is maintained in `docs/definition-of-done.md`. It gates what EXITS development — nothing is released unless ALL criteria are met. Enhanced automatically by client SDLC controls when `/initiate` captures them. Summary of core (non-negotiable) criteria:
 
 1. **Traceability — 100%** — bidirectional: scenario ↔ test ↔ code. No orphans.
 2. **All Tests Passing and Automated** — no pending, no skipped, no manual. CI enforced.
@@ -158,6 +162,14 @@ The full Definition of Done is maintained in `docs/definition-of-done.md` — th
 **Nothing is released unless ALL criteria are met. No negotiation. No deferral.**
 
 SM enforces DoD continuously (not just at release) and blocks deployment on any gap.
+
+### SDLC Enhancement Flow
+
+When client SDLC controls are captured via `/initiate`:
+- **DoR** gets upstream process criteria (reviewers identified, security review scheduled, CAB timeline factored)
+- **DoD** gets downstream completion criteria (PR approved, AppSec signed off, CAB approval obtained)
+
+This ensures the team follows the client's process without separate process documentation — it's built into the quality gates the team already enforces.
 
 ## Backlog (Continuously Fed)
 

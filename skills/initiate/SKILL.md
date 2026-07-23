@@ -342,6 +342,64 @@ Status:
 | /deploy-and-validate | Full SDLC | All envs | CI/CD patterns | Env data | Platform team | Full setup | — |
 | /release | Change mgmt | Prod access | — | — | Release authority | Monitoring | — |
 
+## SDLC → Definition of Ready & Definition of Done (Automatic Enhancement)
+
+When client SDLC controls are captured (area 1), SM **automatically** derives additional criteria for both the Definition of Ready (`docs/definition-of-ready.md`) and Definition of Done (`docs/definition-of-done.md`).
+
+### How It Works
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  1. User provides SDLC controls (via /initiate or gap-fill)│
+│                                                             │
+│  2. SM reads docs/engagement/sdlc-controls.md              │
+│                                                             │
+│  3. SM derives criteria:                                    │
+│     ┌─────────────────────────────────────────────────┐    │
+│     │ SDLC Input          → DoR Enhancement           │    │
+│     │────────────────────────────────────────────────│    │
+│     │ PR review rules     → Reviewers identified      │    │
+│     │ Security gates      → AppSec notified if needed │    │
+│     │ Change management   → CAB timeline factored in  │    │
+│     │ Release cadence     → Feature sized to fit      │    │
+│     │ Arch review         → Review scheduled          │    │
+│     │ Dep scanning        → Dependencies pre-approved │    │
+│     └─────────────────────────────────────────────────┘    │
+│     ┌─────────────────────────────────────────────────┐    │
+│     │ SDLC Input          → DoD Enhancement           │    │
+│     │────────────────────────────────────────────────│    │
+│     │ PR review rules     → PR approved by N reviewers│    │
+│     │ Security gates      → AppSec sign-off obtained  │    │
+│     │ Change management   → CAB approval obtained     │    │
+│     │ Code signing        → Artifacts signed          │    │
+│     │ Static analysis     → SAST passes               │    │
+│     │ Dep scanning        → No new high/critical CVEs │    │
+│     │ Doc standards       → Documentation updated     │    │
+│     │ Release approval    → Authority signed off      │    │
+│     └─────────────────────────────────────────────────┘    │
+│                                                             │
+│  4. SM adds to SDLC-Derived tables in both documents       │
+│                                                             │
+│  5. SM presents to User:                                    │
+│     "Based on your SDLC controls, I've added these         │
+│      criteria to DoR and DoD: [list]. Approve?"            │
+│                                                             │
+│  6. User approves / adjusts → SM finalizes                  │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Mapping Rules
+
+SM applies criteria selectively — not every SDLC control generates a criterion:
+- **If** the client requires PR reviews → DoR gets "reviewers identified", DoD gets "PR approved"
+- **If** the client has security gates → DoR gets "AppSec notified if applicable", DoD gets "AppSec signed off"
+- **If** the client has change management → DoR gets "timeline factored", DoD gets "CAB approved"
+- **If not applicable** (e.g., no CAB process) → no criterion added for that area
+
+SM uses judgment — the goal is to ensure the team follows the client's process, not to add bureaucracy where the client hasn't required it.
+
 ## Living Knowledge (Grows Over Iterations)
 
 After each iteration, SM updates `docs/engagement/` with what was learned:

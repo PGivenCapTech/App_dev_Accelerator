@@ -27,9 +27,11 @@ If ANY required context is missing → prompt User (see `/initiate` gap-fill pro
 | **Technical** | Dmitri | Is it feasible? What's hard? What's risky? |
 | **Navigator** | User | Steers, approves, provides domain knowledge the team lacks |
 
-## Definition of Ready (Exit Criteria)
+## Definition of Ready (Authoritative: `docs/definition-of-ready.md`)
 
-A backlog item is READY when ALL of these are true:
+The full Definition of Ready is maintained in `docs/definition-of-ready.md` — that file is the single source of truth. It includes core criteria, SDLC-derived criteria (added automatically when client SDLC controls are captured via `/initiate`), and any engagement-specific criteria the User has added.
+
+A backlog item is READY when ALL criteria in that document are met. Summary of core criteria:
 
 ```
 □ Behavior described in concrete examples (Given/When/Then)
@@ -43,6 +45,8 @@ A backlog item is READY when ALL of these are true:
 □ Effort estimate agreed (S/M/L)
 □ User approves: "This is ready to design"
 ```
+
+**Plus** any SDLC-derived and engagement-specific criteria from `docs/definition-of-ready.md`.
 
 ## The Loop
 
