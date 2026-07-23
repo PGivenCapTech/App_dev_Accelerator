@@ -67,7 +67,30 @@ Then capture specifics:
 - SLO targets (availability, latency, error rate)
 - Logging format and destination
 
-### 7. Technical Debt & Known Issues
+### 7. Systems of Record (see `docs/systems-of-record.md` for full reference)
+
+External systems the team integrates with. Ask in priority order:
+
+**P1 (before first feature):**
+- Requirements tool (Jira/ADO/Linear) — bidirectional: pull stories, push refined scenarios, create new for gaps
+- Source control (already captured in SDLC)
+
+**P2 (before first deploy):**
+- Test management (Xray/Zephyr/TestRail) — bidirectional: publish test cases + results, consume existing tests
+- Artifact repository (Artifactory/ECR/Nexus) — publish: versioned build artifacts
+- Communication (Slack/Teams) — notify: deploy status, failures
+
+**P3 (before first release):**
+- Change management (ServiceNow/manual) — bidirectional: create change records, get approvals
+- Security scanning (SonarQube/Snyk) — publish findings, consume policies
+- Documentation (Confluence/SharePoint) — publish: runbooks, API docs, release notes
+
+**P4 (ongoing):**
+- Monitoring/Incidents (PagerDuty/Datadog) — configure alerts, create incidents on failure
+
+For each system, capture: tool name, URL, access method, sync direction, integration points.
+
+### 8. Technical Debt & Known Issues
 - Fragile areas to be cautious with
 - Known performance bottlenecks
 - Pending migrations that might conflict
@@ -92,13 +115,14 @@ Present derived criteria to User for approval before they become enforceable.
 Document answers in:
 ```
 docs/engagement/
-  sdlc-controls.md       — Effective practices (each marked "client-specified" or "default")
-  environments.md        — Infrastructure and access
-  codebase-patterns.md   — Build, test, conventions
-  test-data.md           — Data strategy and constraints
-  team.md                — Contacts and communication
-  observability.md       — Monitoring and alerting
-  tech-debt.md           — Known risks (grows over iterations)
+  sdlc-controls.md        — Effective practices (each marked "client-specified" or "default")
+  environments.md         — Infrastructure, strategy (local/cloud/hybrid), access
+  codebase-patterns.md    — Build, test, conventions
+  test-data.md            — Data strategy and constraints
+  team.md                 — Contacts and communication
+  observability.md        — Monitoring and alerting
+  systems-of-record.md    — External systems, sync direction, integration points
+  tech-debt.md            — Known risks (grows over iterations)
 ```
 
 ## Invocation Variants

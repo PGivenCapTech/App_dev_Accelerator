@@ -68,11 +68,12 @@ Every loop, before starting substantive work, checks for required engagement con
 
 **Engagement context lives in `docs/engagement/`:**
 - `sdlc-controls.md` — Git workflow, change management, security gates, review process
-- `environments.md` — Cloud accounts, access, network, secrets, CI/CD
+- `environments.md` — Environment strategy (local/cloud/hybrid), cloud accounts, access, CI/CD
 - `codebase-patterns.md` — Build tooling, test frameworks, conventions, shared libraries
 - `test-data.md` — Data constraints, sources, synthetic generation, PII handling
 - `team.md` — Client contacts, communication channels, review/approval people
 - `observability.md` — Monitoring tools, alerting, SLOs, log/trace/metric standards
+- `systems-of-record.md` — External systems (Jira, Xray, Artifactory, etc.), sync direction, integration
 - `tech-debt.md` — Known risks, fragile areas, low coverage zones (grows over iterations)
 
 **Stated assumptions** (from "skip") are tracked and must be validated before `/release`. An assumption that reaches production without validation is a risk SM must flag.

@@ -183,8 +183,8 @@ cp .accelerator/docs/definition-of-done.md docs/definition-of-done.md
 
 ```bash
 # Create empty engagement context files with headers
-for area in sdlc-controls environments codebase-patterns test-data team observability tech-debt; do
-  echo "# ${area}\n\n_To be captured during /initiate._" > "docs/engagement/${area}.md"
+for area in sdlc-controls environments codebase-patterns test-data team observability systems-of-record tech-debt; do
+  printf "# %s\n\n_To be captured during /initiate._\n" "$area" > "docs/engagement/${area}.md"
 done
 ```
 

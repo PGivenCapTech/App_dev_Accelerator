@@ -282,7 +282,80 @@ How to monitor what we build:
 - Recovery point objective: [RPO]
 ```
 
-### 7. Technical Debt & Known Issues (`docs/engagement/tech-debt.md`)
+### 7. Systems of Record (`docs/engagement/systems-of-record.md`)
+
+External systems the team integrates with. See `docs/systems-of-record.md` for full category reference.
+
+**Ask about each in priority order:**
+
+**P1 (before first feature):**
+```markdown
+## Requirements Management (Bidirectional)
+- Tool: [Jira / ADO / Linear / none — repo only]
+- URL: [base URL]
+- Access: [API token / OAuth / service account]
+- Project/Board: [identifier]
+- Hierarchy: [Epic → Story → Subtask / custom]
+- Workflow states: [mapping to team's states]
+- Can team create stories: [yes / no / with approval]
+- Fields: [acceptance criteria field, estimate field, labels]
+```
+
+**P2 (before first deploy):**
+```markdown
+## Test Management (Bidirectional)
+- Tool: [Xray / Zephyr / TestRail / none — repo only]
+- URL: [base URL]
+- Access: [API token]
+- Import format: [Cucumber JSON / JUnit XML / API calls]
+- Linked to requirements via: [Jira link / direct / test plan]
+- Evidence requirements: [pass/fail only? screenshots? logs?]
+- Regulatory: [is test evidence required for audit?]
+
+## Artifact Repository (Publish)
+- Tool: [Artifactory / ECR / Nexus / GitHub Packages / none]
+- URL: [base URL]
+- Access: [credentials / IAM role]
+- Versioning: [semver / commit-hash / date]
+- Naming convention: [org/project/artifact:tag]
+- Signing: [required? approach]
+```
+
+**P3 (before first release):**
+```markdown
+## Change Management
+- Tool: [ServiceNow / Jira SM / manual / none]
+- Process: [standard / normal / emergency]
+- Lead time: [days]
+- Pre-approved patterns: [any auto-approved deploys?]
+
+## Security Scanning
+- Tool(s): [SonarQube / Checkmarx / Snyk / etc.]
+- CI integration: [existing? team sets up?]
+- Finding management: [same tool / separate tracking]
+
+## Documentation Platform (Publish)
+- Tool: [Confluence / SharePoint / Notion / repo only]
+- What must be published there: [runbooks? API docs? ADRs?]
+- Access: [API / manual]
+```
+
+**P4 (ongoing):**
+```markdown
+## Communication
+- Deploy notifications: [Slack channel / Teams / webhook URL]
+- Team channel: [where to ask questions]
+- Stakeholder updates: [channel / email list]
+
+## Monitoring / Incidents
+- Monitoring tool: [Datadog / CloudWatch / Grafana]
+- Incident tool: [PagerDuty / OpsGenie / manual]
+- Auto-incident on rollback: [yes / no]
+```
+
+**Not all are needed immediately.** SM captures what's known, notes what's missing, and asks again when the relevant loop needs it (P1 before refine, P2 before deploy, P3 before release).
+
+### 8. Technical Debt & Known Issues (`docs/engagement/tech-debt.md`)
 
 Living document — grows over iterations:
 
@@ -388,6 +461,7 @@ Required context:
   □ docs/engagement/test-data.md — [specific fields needed]
   □ docs/engagement/team.md — [specific fields needed]
   □ docs/engagement/observability.md — [specific fields needed]
+  □ docs/engagement/systems-of-record.md — [specific systems needed]
   □ docs/discovery/context-package.md — [specific fields needed]
 
 Status:
@@ -398,14 +472,14 @@ Status:
 
 ## What Each Loop Needs from Engagement Context
 
-| Loop | SDLC | Envs | Codebase | Test Data | Team | Observability | Tech Debt |
-|---|---|---|---|---|---|---|---|
-| /refine | — | — | — | — | Product contact | — | Known risks |
-| /spike | — | Sandbox | Existing patterns | — | Tech lead | — | Fragile areas |
-| /design | — | Target arch | Full patterns | Strategy | Reviewers | Tools + targets | Full map |
-| /test-and-develop | Review rules | Test env | Test infra | Full strategy | Reviewers | — | Coverage map |
-| /deploy-and-validate | Full SDLC | All envs | CI/CD patterns | Env data | Platform team | Full setup | — |
-| /release | Change mgmt | Prod access | — | — | Release authority | Monitoring | — |
+| Loop | SDLC | Envs | Codebase | Test Data | Team | Observability | Tech Debt | Systems of Record |
+|---|---|---|---|---|---|---|---|---|
+| /refine | — | — | — | — | Product contact | — | Known risks | Requirements (Jira) |
+| /spike | — | Sandbox | Existing patterns | — | Tech lead | — | Fragile areas | — |
+| /design | — | Target arch | Full patterns | Strategy | Reviewers | Tools + targets | Full map | — |
+| /test-and-develop | Review rules | Test env | Test infra | Full strategy | Reviewers | — | Coverage map | Test Mgmt (Xray) |
+| /deploy-and-validate | Full SDLC | All envs | CI/CD patterns | Env data | Platform team | Full setup | — | Artifacts, Change Mgmt, Comms |
+| /release | Change mgmt | Prod access | — | — | Release authority | Monitoring | — | All (close stories, publish evidence) |
 
 ## SDLC → Definition of Ready & Definition of Done (Automatic Enhancement)
 
