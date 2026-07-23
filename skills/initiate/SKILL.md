@@ -82,16 +82,47 @@ How this client builds and ships software. **The team operates on leading practi
 - Override reason: [if client differs from default, why]
 ```
 
-### 2. Environment Access (`docs/engagement/environments.md`)
+### 2. Environment Strategy & Access (`docs/engagement/environments.md`)
 
-Infrastructure the team needs:
+SM selects an environment strategy based on what's available. See `docs/environment-strategy.md` for full detail on each option.
+
+**Strategy selection questions:**
+```
+1. Do you have a cloud account (AWS/Azure/GCP) with deploy permissions?
+   → Yes: Cloud or Hybrid possible
+   → No / pending: Local for now, can graduate later
+
+2. Do you have a CI/CD platform set up (GitHub Actions, ADO, Jenkins)?
+   → Yes: Pipeline exists (or can be extended)
+   → No: Team will bootstrap one during first feature
+
+3. Do you need to deploy to production as part of this engagement?
+   → Yes: Cloud or Hybrid required eventually
+   → No (POC/prototype): Local is fine
+
+4. How many developers will work simultaneously?
+   → 1: Any strategy works
+   → 2+: Need isolation (ephemeral envs or local per-dev)
+```
+
+**Strategy outcomes:**
+- **Local** → Docker Compose, no cloud. Pipeline = Makefile targets. Fast, zero cost.
+- **Cloud** → Ephemeral per-branch + shared test/staging/prod. Full CI/CD.
+- **Hybrid** → Docker locally + cloud for upper environments. Best of both.
+
+**If no CI/CD pipeline exists:** SM notes that the first feature's `/design` and `/test-and-develop` loops will include pipeline creation as a deliverable.
+
+After strategy selection, capture infrastructure detail:
 
 ```markdown
-## Cloud Account
+## Environment Strategy: [local / cloud / hybrid]
+
+## Cloud Account (if applicable)
 - Provider: [AWS / Azure / GCP / hybrid]
 - Account/subscription: [ID]
-- IAM access: [how devs get permissions]
-- Least-privilege model: [boundaries]
+- Region: [primary region]
+- IAM access: [how devs/CI get permissions]
+- Budget constraints: [if any]
 
 ## Environments Available
 | Environment | Purpose | Access | Provisioning |
@@ -100,6 +131,11 @@ Infrastructure the team needs:
 | test | Integration testing | [how to access] | [who owns] |
 | staging | Pre-prod mirror | [how to access] | [who owns] |
 | prod | Production | [how to access] | [who deploys] |
+
+## Local Development (if local or hybrid)
+- Docker available: [yes/no, version]
+- Machine resources: [RAM, CPU available for containers]
+- Port conventions: [what ports are free]
 
 ## Network & Connectivity
 - VPC / network topology: [description or diagram reference]

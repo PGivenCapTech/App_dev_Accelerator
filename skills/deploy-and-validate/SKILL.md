@@ -114,14 +114,35 @@ Paul validates:
   □ Monitoring/alerting firing correctly
 ```
 
-## AWS Default Infrastructure Per Environment
+## Infrastructure by Strategy (see `docs/environment-strategy.md`)
 
-| Resource | Dev | Test | Staging |
+Check `docs/engagement/environments.md` for the selected strategy.
+
+### Local Strategy
+```
+Dev:     docker-compose up → run tests against containers
+Test:    docker-compose -f docker-compose.test.yml up → full suite
+Staging: N/A (or same as test with production-like data volume)
+Prod:    N/A — graduate to cloud/hybrid when ready
+```
+Quality gates still enforced (coverage, traceability, tests green). No promotion beyond test locally.
+
+### Cloud Strategy (AWS Default)
+
+| Resource | Dev (ephemeral) | Test | Staging |
 |---|---|---|---|
 | Compute | Fargate 0.5vCPU/1GB | Fargate 1vCPU/2GB | Fargate 2vCPU/4GB (prod mirror) |
 | Database | RDS t3.micro | RDS t3.small | RDS t3.medium, multi-AZ |
 | Events | EventBridge (shared) | EventBridge (isolated) | EventBridge (prod mirror) |
 | Monitoring | Basic CloudWatch | Enhanced + X-Ray | Full + Alarms |
+
+### Hybrid Strategy
+```
+Dev:     Docker Compose locally (each developer's machine, isolated)
+Test:    Cloud (shared) — deploy on PR merge via CI
+Staging: Cloud (shared) — User approval required
+Prod:    Cloud (shared) — User approval + all DoD gates
+```
 
 ## Failure Handling
 

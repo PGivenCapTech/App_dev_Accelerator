@@ -74,14 +74,33 @@ If validation fails:
 5. Paul re-runs validation suite
 6. Loop until green or User decides to rollback
 
-## AWS Default Infrastructure
+## Infrastructure by Strategy
 
-| Resource | Dev | Test | Staging |
+Check `docs/engagement/environments.md` for the selected strategy.
+
+### If Local Strategy:
+```
+Dev:     docker-compose up → run tests against containers
+Test:    docker-compose -f docker-compose.test.yml up → full test suite
+Staging: N/A (or same as test with load simulation)
+Prod:    N/A — graduate to cloud when ready
+```
+
+### If Cloud Strategy (AWS Default):
+| Resource | Dev (ephemeral) | Test | Staging |
 |---|---|---|---|
 | Compute | Fargate 0.5vCPU/1GB | Fargate 1vCPU/2GB | Fargate 2vCPU/4GB |
 | Database | RDS t3.micro | RDS t3.small | RDS t3.medium, multi-AZ |
 | Events | EventBridge (shared) | EventBridge (isolated) | EventBridge (prod mirror) |
 | Monitoring | Basic CloudWatch | Enhanced + X-Ray | Full + Alarms |
+
+### If Hybrid Strategy:
+```
+Dev:     Docker Compose locally (developer machine)
+Test:    Cloud (shared) — GitHub Actions deploys on PR merge
+Staging: Cloud (shared) — User approval required
+Prod:    Cloud (shared) — User approval required
+```
 
 ## Output
 

@@ -188,14 +188,33 @@ The backlog receives input from 5 sources:
 
 SM maintains `backlog/backlog.md` as single source of truth.
 
-## Deployment (AWS Default)
+## Environment Strategy (see `docs/environment-strategy.md`)
 
+Three options selected during `/initiate` based on what's available:
+
+| Strategy | What's Needed | Multi-Dev |
+|---|---|---|
+| **Local** | Docker only | Each dev runs own stack |
+| **Cloud** (AWS default) | Cloud account + CI/CD | Ephemeral per-branch + shared upper |
+| **Hybrid** | Docker + cloud for upper envs | Local dev, cloud test/staging/prod |
+
+**Cloud defaults (when applicable):**
 ```
 Pipeline: GitHub Actions
 IaC: AWS CDK (TypeScript)
-Environments: dev → test → staging → prod
+Environments: dev (ephemeral) → test → staging → prod
 Strategy: Blue/green with automated rollback
 ```
+
+**Local defaults (when no cloud):**
+```
+Pipeline: Makefile + docker-compose
+IaC: docker-compose.yml
+Environments: dev (docker-compose up) → test (docker-compose.test.yml)
+Strategy: Container restart
+```
+
+If no CI/CD pipeline exists, the team bootstraps one during the first feature's `/design` and `/test-and-develop` loops.
 
 ## Conventions
 

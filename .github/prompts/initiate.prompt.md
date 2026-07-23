@@ -18,12 +18,29 @@ Ask about each area. For each, you need enough detail to know whether to overrid
 - Security gates (default: automated SAST every PR, dep scanning every build)
 - Release process (default: continuous delivery, blue/green)
 
-### 2. Environments
-- Cloud provider (default: AWS)
+### 2. Environment Strategy & Access
+
+First, determine the strategy (see `docs/environment-strategy.md`):
+
+Ask:
+- "Do you have a cloud account with deploy permissions?" (Yes → cloud/hybrid, No → local)
+- "Do you have CI/CD set up?" (Yes → use it, No → team bootstraps during first feature)
+- "Need to deploy to production?" (Yes → cloud/hybrid eventually, No → local is fine)
+- "How many developers simultaneously?" (2+ → need isolation)
+
+Strategy outcomes:
+- **Local** → Docker Compose, Makefile, no cloud needed
+- **Cloud** → Ephemeral per-branch + shared upper environments (AWS default)
+- **Hybrid** → Docker locally + cloud for test/staging/prod
+
+Then capture specifics:
+- Cloud provider (default: AWS) — account ID, region, IAM access
 - Environments available (default: dev/test/staging/prod)
-- How to access, who provisions
-- Secrets management (default: AWS Secrets Manager)
+- Docker available locally (version, machine resources)
+- Secrets management (default: AWS Secrets Manager or local .env for local strategy)
 - CI/CD platform (default: GitHub Actions)
+
+**If no pipeline exists:** Note that first feature will bootstrap it.
 
 ### 3. Codebase Patterns
 - Language and framework
