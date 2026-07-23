@@ -1,151 +1,94 @@
 # App Dev Accelerator
 
-A collaborative development team (Claude Code plugin) that builds deployed software from DiscoveryAccelerator output. Four agents work as a team — not a pipeline — with test-first development, 100% traceability, 100% coverage, and multi-environment deployment.
+A collaborative development team (Claude Code plugin) combining **XP**, **BDD**, **FDD**, and **strong NFR testing**. Four agents work as a pair-programming team with the User as navigator. Three workflows compose six reusable loops for new features, defect fixes, and refactoring.
 
 ## Quick Start
 
 ```bash
-# Clone
 git clone <repo-url> ~/App_dev_Accelerator
-
-# Install as Claude Code plugin
 /plugin marketplace add ~/App_dev_Accelerator
-
-# Link to a discovery project and bootstrap
 /ingest ~/DiscoveryAccelerator
-
-# Start the iteration cycle
-/plan
-/test-and-build
-/deploy
-/release
+/new-feature
 ```
 
-## How It Works
+## The Team
 
-### Upstream: DiscoveryAccelerator Provides Context
+| Agent | Role | Pairing Model |
+|---|---|---|
+| **SM** | Scrum Master — orchestrates loops, enforces gates | Facilitator |
+| **Igor** | Behavior — Gherkin scenarios, domain language | BDD "Business" voice |
+| **Paul** | Testing — tests FIRST, NFRs, regression | BDD "Testing" voice |
+| **Dmitri** | Technical — implementation, infra, pipeline | BDD "Technical" voice |
+| **User** | Navigator — approves every test/impl pair | XP Customer on team |
 
-This team does NOT do industry research, domain discovery, or architecture selection. That's handled by the [DiscoveryAccelerator](https://github.com/PGivenCapTech/DiscoveryAccelerator) (14 agents: Anu, Archie, Scout, Paul, Scribe, analysts, etc.).
+## Workflows (Entry Points)
 
-The `/ingest` skill pulls discovery output into the dev project, and `/ingest --refresh` picks up updates continuously.
+| Workflow | When to Use | Loops Composed |
+|---|---|---|
+| `/new-feature` | Net-new functionality | refine → spike → design → test-and-develop → deploy-and-validate → release |
+| `/fix-defect` | Bug fix | reproduce → root-cause → test-and-fix → deploy-and-validate → release |
+| `/refactor` | Restructure, preserve behavior | scope → characterize → design → move-under-green → deploy-and-validate → release |
 
-### The Team
+## Core Loops (Reusable)
 
-| Agent | Role |
-|---|---|
-| **SM** | Scrum Master — orchestrates iterations, manages backlog, enforces quality gates |
-| **Igor** | Story Translator — decomposes discovery backlog into dev-sized Gherkin features |
-| **Paul** | Test Engineer — builds test infrastructure FIRST; co-owns deployment pipeline |
-| **Dmitri** | Developer — implements against Paul's tests; co-owns pipeline + AWS infra |
+| Loop | Purpose | Key Practice |
+|---|---|---|
+| `/refine` | Work item → Definition of Ready | BDD Three Amigos + examples |
+| `/spike` | Validate assumptions (time-boxed) | Evidence, not opinions |
+| `/design` | Technical "how" — FDD Design by Feature | Domain model, events, API, NFR strategy |
+| `/test-and-develop` | Build code — XP pairing + TDD | Ping-pong: Paul tests → Dmitri implements → User approves each |
+| `/deploy-and-validate` | Push through environments | Validate per level, loop back on failure |
+| `/release` | Production + iteration closure | Blue/green, smoke, feedback |
 
-### The Skills (Iteration Cycle)
-
-```
-/plan → /test-and-build → /deploy → /release → (user feedback) → /plan ...
-```
-
-| Skill | What Happens |
-|---|---|
-| `/plan` | SM proposes iteration, Igor writes features, Paul plans tests. User approves. |
-| `/test-and-build` | Paul builds tests first, Dmitri codes against them. SM verifies gates. |
-| `/deploy` | Dmitri + Paul deploy dev → test → staging. User approves promotions. |
-| `/release` | Production deploy, smoke verification, user gives iteration feedback. |
-
-### Supporting Skills
+## Connection to Discovery
 
 | Skill | Purpose |
 |---|---|
-| `/ingest` | Bootstrap from discovery or refresh with new context |
-| `/challenge` | Feed implementation learnings back to discovery team |
+| `/ingest` | Bootstrap from DiscoveryAccelerator or refresh |
+| `/challenge` | Feed implementation learnings back upstream |
 
-## Non-Negotiable Quality Gates
+## Quality Gates (Non-Negotiable)
 
-- **100% Traceability** — every requirement ↔ test ↔ code, bidirectional
+- **100% Traceability** — requirement ↔ test ↔ code (bidirectional)
 - **100% Unit Test Coverage** — line + branch, no exclusions
-- **All BDD Scenarios Pass** — no pending, no skipped
-- **User Approval** — at iteration plan, contents, promotion, and feedback
+- **All BDD Scenarios Green** — no pending, no skipped
+- **All NFR Scenarios Green** — performance, security, resilience
+- **User Approval** — at every pairing cycle + workflow gates
 
-## Human Approval Gates
+## Practices Embedded
 
-The user drives. SM pauses at:
+**XP:** Pairing, TDD (red-green-refactor), continuous integration, small releases, simple design, collective ownership, refactoring as first-class workflow, customer on team.
 
-1. **Iteration Plan** — approve which features, structure, effort
-2. **Iteration Contents** — approve Igor's decomposition + Paul's test plan
-3. **Environment Promotions** — approve each promotion (test → staging → prod)
-4. **Post-Iteration Feedback** — review demo, metrics, learnings; adjust next iteration
+**BDD:** Outside-in development, Three Amigos refinement, examples drive tests, living documentation, Gherkin as single source of truth.
 
-## Continuous Backlog Feed
+**FDD:** Feature as unit of work, domain model first, design by feature, build by feature, regular builds.
 
-The backlog is never static. It receives input from:
-
-1. **Discovery proposals** (`/ingest --refresh`)
-2. **Implementation learnings** (`/challenge` → resolved → `/ingest --refresh`)
-3. **User feedback** (`/release` post-iteration)
-4. **Technical debt** (identified during `/test-and-build`)
-5. **Analyst updates** (new compliance/security requirements)
+**NFR Testing:** Performance, security, and resilience as Gherkin scenarios — both inline per feature and cross-cutting system suites.
 
 ## AWS Default
 
-When no implementation context specifies otherwise:
+When no implementation context specifies otherwise: ECS Fargate, RDS PostgreSQL, EventBridge, CDK, GitHub Actions, blue/green deploys across dev → test → staging → prod.
 
-| Layer | Default |
-|---|---|
-| Compute | ECS Fargate / Lambda |
-| Database | RDS PostgreSQL |
-| Events | EventBridge + SQS |
-| IaC | AWS CDK (TypeScript) |
-| CI/CD | GitHub Actions |
-| Environments | dev → test → staging → prod |
-
-## Project Structure (This Repo — The Template)
+## Project Structure
 
 ```
-.claude-plugin/
-  marketplace.json          — Plugin registration
-.claude/
-  skills/                   — Symlinks to skill definitions
-agents/
-  sm-scrummaster.md         — Scrum Master agent
-  igor-product-owner.md     — Story Translator agent
-  paul-tester.md            — Test Engineer agent
-  dmitri-developer.md       — Developer agent
+agents/                          — 4 agent definitions
 skills/
-  plan/SKILL.md             — /plan skill definition
-  test-and-build/SKILL.md   — /test-and-build skill definition
-  deploy/SKILL.md           — /deploy skill definition
-  release/SKILL.md          — /release skill definition
-  ingest/SKILL.md           — /ingest skill definition
-  challenge/SKILL.md        — /challenge skill definition
-docs/
-  discovery/                — Ingested from DiscoveryAccelerator (after /ingest)
-  technology/               — Architecture decisions (generated)
-CLAUDE.md                   — Team instructions and conventions
+  refine/SKILL.md                — /refine loop
+  spike/SKILL.md                 — /spike loop
+  design/SKILL.md                — /design loop
+  test-and-develop/SKILL.md      — /test-and-develop loop
+  deploy-and-validate/SKILL.md   — /deploy-and-validate loop
+  release/SKILL.md               — /release loop
+  new-feature/SKILL.md           — /new-feature workflow
+  fix-defect/SKILL.md            — /fix-defect workflow
+  refactor/SKILL.md              — /refactor workflow
+  ingest/SKILL.md                — /ingest connection
+  challenge/SKILL.md             — /challenge connection
+.claude-plugin/marketplace.json  — Plugin registration
+CLAUDE.md                        — Team instructions
 ```
 
-## Relationship to DiscoveryAccelerator
+## Upstream Dependency
 
-```
-DiscoveryAccelerator (upstream)          App Dev Accelerator (this repo)
-─────────────────────────────           ────────────────────────────────
-14 agents: Scout, Anu, Archie,          4 agents: SM, Igor, Paul, Dmitri
-  Paul, Scribe, Opi, Captain            6 skills: /plan, /test-and-build,
-  Obvious, Reggi, Leggi, Rikki,           /deploy, /release, /ingest,
-  Cissi, Itty, Polly, Fin                 /challenge
-
-Produces:                               Consumes:
-  context.md                     ──→      docs/discovery/context.md
-  proposals/                     ──→      docs/discovery/proposals/
-  backlog items                  ──→      backlog/backlog.md
-  architecture decisions         ──→      docs/technology/
-
-                                        Feeds back:
-  resolved challenges            ←──      /challenge items
-  revised requirements           ←──      implementation learnings
-```
-
-## Prerequisites
-
-- Claude Code (CLI, desktop, or IDE extension)
-- DiscoveryAccelerator plugin installed (upstream)
-- AWS credentials configured (for `/deploy` and `/release`)
-- Git
+Requires [DiscoveryAccelerator](https://github.com/PGivenCapTech/DiscoveryAccelerator) for industry context, domain model, architecture decisions, and validated backlog.

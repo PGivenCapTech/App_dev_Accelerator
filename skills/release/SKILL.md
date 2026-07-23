@@ -1,163 +1,151 @@
 ---
 name: release
-description: Team skill — Production release with user approval, blue/green deploy, smoke verification, and post-release feedback loop. Final gate before done.
+description: Release loop — production deployment with blue/green, smoke verification, monitoring, rollback readiness, and post-release feedback. Closes the iteration.
 allowed-tools: [Read, Write, Edit, Bash, Agent]
 user-invocable: true
 ---
 
-# /release — Production Release (Team Skill)
+# /release — Release Loop (Production + Feedback)
 
-The **Release** skill is the final step — deploying to production with full safety: user approval, blue/green strategy, smoke verification, monitoring, and rollback readiness. After successful release, SM collects user feedback and closes the iteration.
+The **Release** loop handles the final step — deploying to production with full safety, verifying health, and collecting post-iteration feedback to feed the next cycle. This closes the iteration.
 
-## Who Participates
+## Participants
 
-| Agent | Role in Release |
-|---|---|
-| **Dmitri** | Executes: production deploy (blue/green), monitoring, rollback |
-| **Paul** | Verifies: production smoke tests, synthetic monitoring, health |
-| **SM** | Gates: user approval, post-release feedback collection |
-| **User** | Approves: production deploy; provides post-iteration feedback |
+| Role | Agent | Contribution |
+|---|---|---|
+| **Deploy** | Dmitri | Blue/green production deploy, monitoring, rollback |
+| **Verify** | Paul | Production smoke tests, synthetic monitoring |
+| **Orchestrate** | SM | Release readiness, user gates, feedback collection |
+| **Navigator** | User | Final approval, post-release feedback |
 
-## Prerequisites
+## Entry Criteria
 
-- `/deploy` completed through staging
+- Feature validated through staging (/deploy-and-validate complete)
+- All quality gates pass (traceability 100%, coverage 100%, all tests green)
 - Staging smoke tests pass
-- Staging performance within baseline
-- All quality gates (traceability 100%, coverage 100%) confirmed
-- User approved staging in `/deploy` Gate 4b
+- User approved staging promotion
 
-## The Process
-
-### Step 1: Release Readiness Check
-
-SM presents release summary to user:
+## The Loop
 
 ```
-RELEASE READINESS: <Feature Name>
-
-Traceability:     100% ✅ (N scenarios → M tests → K source files)
-Coverage:         100% ✅ (line + branch)
-BDD Scenarios:    N/N pass ✅
-Integration:      M/M pass ✅
-NFR:              All within thresholds ✅
-Staging Smoke:    Pass ✅
-Regression:       No regressions ✅
-
-Changes in this release:
-- [Feature A]: <summary>
-- [Feature B]: <summary> (if multiple features)
-
-Rollback plan:
-- Blue/green swap (< 30s)
-- DB migration reversible: Yes/No
-- Feature flags: [list if applicable]
+┌─────────────────────────────────────────────────────────┐
+│                                                         │
+│  1. SM presents release readiness                       │
+│     - Quality summary (trace, coverage, tests)         │
+│     - What's in this release                           │
+│     - Rollback plan                                    │
+│     → User: "Approve production release?"              │
+│                                                         │
+│  2. Dmitri executes blue/green deploy                   │
+│     - Deploy to green (blue stays live)                │
+│     - Health check on green                            │
+│     → User: "Green deployed, health: ✅. Run smoke?"   │
+│                                                         │
+│  3. Paul runs production smoke                          │
+│     - Critical path verification on green              │
+│     - Event flow verification                          │
+│     → User: "Smoke results: [pass/fail]. Swap traffic?"│
+│                                                         │
+│  4. Swap traffic?                                       │
+│     □ Smoke passes → Dmitri swaps traffic to green     │
+│     □ Smoke fails → User decides:                      │
+│       - Fix and retry (loop back to step 2)           │
+│       - Abort release (no traffic swap, green torn down)│
+│                                                         │
+│  5. Post-swap monitoring (5-10 minutes)                 │
+│     - Dmitri watches: error rate, latency, resources   │
+│     - Paul runs: synthetic checks every minute         │
+│     → User: "Monitoring healthy / Issue detected"      │
+│                                                         │
+│  6. Healthy?                                            │
+│     □ Yes → Release confirmed ✅                        │
+│     □ No → Auto-rollback (swap back to blue)          │
+│       → User: "Rolled back. Investigate and retry?"   │
+│       → Loop back to /test-and-develop if code fix needed│
+│                                                         │
+│  7. Post-Release Feedback (iteration closure)           │
+│     SM presents:                                       │
+│     - What shipped, for whom                           │
+│     - Quality metrics                                  │
+│     - What was learned                                 │
+│     - Demo of working feature                          │
+│     - Next iteration candidates                        │
+│     → User: "Feedback? Adjust priorities? Ready for    │
+│       next /refine?"                                   │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
 ```
 
-**>>> GATE: User approves production release <<<**
-
-Prompt: "Release is ready. [Summary above]. **Approve production deploy?**"
-
-### Step 2: Production Deploy (After User Approves)
-
-**Dmitri executes:**
-1. Deploy new version to green environment (blue stays live)
-2. Run health checks on green
-3. Paul runs smoke tests against green (not yet receiving traffic)
-4. If smoke passes → swap traffic to green (blue becomes standby)
-5. Monitor: error rate, latency, health for 5-10 minutes
-6. If healthy → mark release successful
-7. If unhealthy → auto-rollback (swap back to blue)
-
-**Paul verifies:**
-- Production smoke test suite (critical paths only — fast)
-- Health endpoint verification
-- Domain event flow verification (events publishing correctly)
-- Synthetic user journey (if applicable)
-
-### Step 3: Post-Release Monitoring
-
-**Dmitri monitors (first 30 minutes):**
-- Error rate vs. baseline (alert if > 2x)
-- P50/P95/P99 latency (alert if regression)
-- Resource utilization (CPU, memory, connections)
-- Domain event processing lag
-
-**Paul runs:**
-- Continuous synthetic checks (every 1 minute for 30 minutes)
-- Report any degradation immediately
-
-**Rollback triggers (automated):**
-- Error rate > 5% for 5 minutes → auto-rollback
-- Health check failures > 3 → auto-rollback
-- P99 > 3x baseline for 5 minutes → alert SM for decision
-
-### Step 4: Post-Iteration Feedback
-
-After successful production release, SM presents iteration summary to user:
-
-**>>> GATE: Post-iteration feedback <<<**
+## Rollback Strategy
 
 ```
-ITERATION COMPLETE: <Iteration N>
+Triggers (automated):
+  - Error rate > 5% sustained 5 minutes → auto-rollback
+  - P99 latency > 3x baseline sustained 5 minutes → alert User
+  - Health check failures > 3 consecutive → auto-rollback
 
-Features delivered:
-- [Feature A]: <what it does, for whom>
-- [Feature B]: <what it does, for whom>
+Mechanism:
+  - Blue/green swap (instant, < 30s)
+  - Database: migration must be forward-compatible (old code works with new schema)
+  - Feature flags: kill switch for new behavior without redeploy
 
-Metrics:
-- Traceability: 100%
-- Coverage: 100%
-- Scenarios: N total (X new this iteration)
-- Environments: all healthy
+Recovery path:
+  - Rollback → diagnose → fix in /test-and-develop → re-enter /deploy-and-validate
+```
 
-What we learned:
-- [Discovery challenge items raised, if any]
-- [Technical surprises]
-- [Scope adjustments made]
+## Post-Release Feedback (Closes Iteration)
+
+SM presents iteration summary:
+
+```
+ITERATION COMPLETE
+
+Features released:
+  - [Feature]: [what, for whom, outcome]
+
+Quality:
+  - Traceability: 100%
+  - Coverage: 100%
+  - Scenarios: N (X functional + Y NFR)
+
+Learnings:
+  - [Discoveries, challenges raised, assumptions validated]
 
 Demo:
-- [How to exercise the feature — URL, commands, or walkthrough]
+  - [How to exercise the feature]
 
-Next iteration candidates (from backlog):
-1. [Feature C] — priority: high, effort: M
-2. [Feature D] — priority: high, effort: S
-3. [Feature E] — priority: medium, effort: L
+Backlog impact:
+  - [New items surfaced during development]
+  - [Items reprioritized based on learnings]
+  - [Challenges sent to Discovery]
+
+Next candidates:
+  1. [Feature A] — ready for /design
+  2. [Feature B] — needs /refine
+  3. [Feature C] — needs /spike first
 ```
 
-Prompt: "Iteration N is complete and in production. [Summary above]. **Your feedback? Anything to adjust? Ready to /plan the next iteration?**"
-
-### Step 5: Close Iteration
-
-After user provides feedback:
-- SM incorporates feedback into backlog priorities
-- Move feature from `backlog/active/` to `backlog/done/`
-- Preserve full traceability matrix in `backlog/done/<slug>/`
-- Update `backlog/backlog.md` with completion notes
-- If user raised concerns → create `/challenge` items or adjust upcoming plans
-- If user is satisfied → ready for next `/plan`
+**User provides feedback** → SM incorporates into backlog priorities before next iteration.
 
 ## Outputs
 
-After `/release` completes:
-
 ```
 backlog/done/<slug>/
-  requirement.md      — Feature file (preserved)
-  tests.md            — Test plan (preserved)
-  implementation.md   — Dev notes (preserved)
-  traceability.md     — Complete trace matrix (preserved)
-  status.md           — "released to production on <date>"
-  release-notes.md    — What shipped, for whom, user feedback
+  feature.md            — Requirements (preserved)
+  design.md             — Technical design (preserved)
+  traceability.md       — Complete trace matrix (preserved)
+  release-notes.md      — What shipped, feedback received
+  status.md             — "released to production on <date>"
 
 monitoring/
-  prod-baseline.md    — Updated performance baseline post-release
+  prod-baseline.md      — Updated performance baseline
 ```
 
 ## Invocation
 
-```
-/release                   — Release current staging-verified iteration to production
-/release --dry-run         — Show what would be released (readiness check only)
-/release --rollback        — Rollback production to previous version
-/release --status          — Show current production state + health
+```bash
+/release                   — Release current staging-verified feature to production
+/release --dry-run         — Readiness check only (no deploy)
+/release --rollback        — Rollback production
+/release --status          — Current production health
 ```

@@ -1,1 +1,0 @@
-../../skills/test-and-build/SKILL.md

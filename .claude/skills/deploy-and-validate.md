@@ -1,0 +1,1 @@
+../../skills/deploy-and-validate/SKILL.md
