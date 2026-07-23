@@ -51,6 +51,12 @@ Three named workflows compose the loops differently:
 | `/ingest` | Bootstrap from DiscoveryAccelerator or refresh with updates |
 | `/challenge` | Feed implementation learnings back to discovery team |
 
+## SDLC Leading Practice Defaults (`docs/sdlc-defaults.md`)
+
+The team operates on leading practice defaults from day one. These cover source control, branch protection, code review, security, static analysis, change management, release process, incident response, dependency management, documentation, secrets, observability, and CI/CD pipeline.
+
+Client SDLC overrides specific areas where it provides explicit detail. Wherever the client's SDLC is silent, defaults remain in effect. SM documents the effective practice for each area (marking "client-specified" or "default") in `docs/engagement/sdlc-controls.md`.
+
 ## Context-Check Protocol (MANDATORY — Every Loop)
 
 Every loop, before starting substantive work, checks for required engagement context. If missing:

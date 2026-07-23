@@ -18,39 +18,68 @@ The **Initiate** loop captures operational context that the DiscoveryAccelerator
 
 ### 1. Client SDLC Controls (`docs/engagement/sdlc-controls.md`)
 
-How this client builds and ships software:
+How this client builds and ships software. **The team operates on leading practice defaults (`docs/sdlc-defaults.md`) from day one.** Client SDLC overrides specific areas where it provides explicit detail — wherever the client is silent, defaults remain in effect.
+
+**SM's job here is NOT to fill every field.** It's to identify where the client's practice differs from our defaults and document those overrides.
 
 ```markdown
 ## Source Control
 - Git workflow: [trunk-based / GitFlow / feature-branch / other]
+  DEFAULT: trunk-based with short-lived feature branches
 - Branch protection: [rules]
+  DEFAULT: main protected, CI + 1 approval required
 - PR review requirements: [N approvers, who]
+  DEFAULT: 1 reviewer, automated checks pass
 - Merge strategy: [squash / merge / rebase]
+  DEFAULT: squash merge
 
 ## Change Management
 - Change approval process: [CAB / lightweight / none]
+  DEFAULT: no CAB; automated gates + User approval for staging/prod
 - CAB cadence: [when it meets]
+  DEFAULT: n/a
 - Lead time for changes: [N days]
+  DEFAULT: zero (deploy-on-green)
 - Emergency change process: [expedited path]
-- Change template: [link or description]
+  DEFAULT: same pipeline, same gates, no shortcuts
 
 ## Security Gates
 - AppSec review required: [yes/no, when]
+  DEFAULT: automated SAST every PR, DAST in staging
 - Penetration testing: [frequency, who]
+  DEFAULT: not scheduled (automated security tests cover)
 - Vulnerability scanning: [tool, when it runs]
+  DEFAULT: every build, block on high/critical
 - Code signing: [required? approach]
+  DEFAULT: not required
 
 ## Quality Gates (Their Standards)
 - Code coverage threshold: [their standard — ours is 100%]
+  DEFAULT: 100% line + branch (team's own standard)
 - Static analysis: [tool, what blocks merge]
+  DEFAULT: linter + formatter, zero warnings
 - Dependency scanning: [tool, policy]
+  DEFAULT: lockfile committed, no high/critical CVEs
 - Performance testing: [when required, who runs]
+  DEFAULT: NFR scenarios run every build
 
 ## Release Process
 - Release cadence: [continuous / weekly / sprint / scheduled]
+  DEFAULT: continuous delivery
 - Release windows: [if applicable]
+  DEFAULT: none (deploy any time)
 - Rollback authority: [who can approve]
+  DEFAULT: automated triggers + User decision
 - Incident response: [process, contacts]
+  DEFAULT: rollback first, investigate second, fix via normal pipeline
+```
+
+**After capturing client SDLC**, SM documents the effective practice for each area:
+```markdown
+## Effective Practice: [Area]
+- Practice: [what's in effect]
+- Source: [client-specified | default]
+- Override reason: [if client differs from default, why]
 ```
 
 ### 2. Environment Access (`docs/engagement/environments.md`)
