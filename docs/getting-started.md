@@ -2,10 +2,12 @@
 
 This guide walks you through setting up and using the App Dev Accelerator team — from installation to your first deployed feature.
 
+The accelerator works with **both Claude Code and GitHub Copilot** (CLI, VS Code Chat, GitHub.com Chat). Same team, same practices, same quality gates — different invocation mechanism.
+
 ## Prerequisites
 
 You need:
-- **Claude Code** installed and configured
+- **Claude Code** OR **GitHub Copilot** (CLI, VS Code extension, or GitHub.com)
 - **A DiscoveryAccelerator output** — the upstream team that provides industry context, domain model, personas, and architecture decisions. If you don't have one, run the [DiscoveryAccelerator](https://github.com/PGivenCapTech/DiscoveryAccelerator) first.
 - **A target project** — either an existing codebase or a greenfield project
 
@@ -15,6 +17,8 @@ Optional but recommended:
 
 ## Installation
 
+### Option A: Claude Code
+
 ```bash
 # Clone the accelerator
 git clone https://github.com/PGivenCapTech/App_dev_Accelerator.git ~/App_dev_Accelerator
@@ -23,16 +27,74 @@ git clone https://github.com/PGivenCapTech/App_dev_Accelerator.git ~/App_dev_Acc
 /plugin marketplace add ~/App_dev_Accelerator
 ```
 
-That's it. The team's skills and agents are now available in your Claude Code session.
+The team's skills and agents are now available in your Claude Code session.
+
+### Option B: GitHub Copilot (CLI / VS Code Chat / GitHub.com)
+
+```bash
+# Clone the accelerator into your project (or as a sibling)
+git clone https://github.com/PGivenCapTech/App_dev_Accelerator.git
+
+# Copy the .github directory into your target project
+cp -r App_dev_Accelerator/.github your-project/.github
+cp -r App_dev_Accelerator/docs your-project/docs
+```
+
+Or if you want the accelerator as a submodule in your project:
+```bash
+cd your-project
+git submodule add https://github.com/PGivenCapTech/App_dev_Accelerator.git .accelerator
+cp -r .accelerator/.github .github
+cp -r .accelerator/docs docs
+```
+
+Copilot automatically reads `.github/copilot-instructions.md` for every conversation and makes `.github/prompts/*.prompt.md` files available as invocable prompts.
+
+### What Goes Where
+
+| File | Claude Code reads | Copilot reads | Purpose |
+|---|---|---|---|
+| `CLAUDE.md` | Yes (auto) | No | Team instructions for Claude Code |
+| `.github/copilot-instructions.md` | No | Yes (auto) | Team instructions for Copilot |
+| `.github/prompts/*.prompt.md` | No | Yes (on invoke) | Loop/workflow prompts for Copilot |
+| `skills/*/SKILL.md` | Yes (on invoke) | No | Loop/workflow skills for Claude Code |
+| `docs/` | Yes | Yes | Shared state (DoR, DoD, defaults, backlog, engagement context) |
+
+Both tools read the same `docs/` directory — the quality gates, SDLC defaults, and engagement context work identically regardless of which tool you use.
 
 ## Your First Session
+
+The steps below are the same regardless of tool. The invocation syntax differs:
+
+| Step | Claude Code | Copilot Chat |
+|---|---|---|
+| Ingest | `/ingest ~/path` | `@workspace #file:ingest.prompt.md` or describe: "Ingest discovery from [path]" |
+| Initiate | `/initiate` | `@workspace #file:initiate.prompt.md` or describe: "Let's set up the engagement" |
+| Refine | `/refine` | `@workspace #file:refine.prompt.md` or describe: "Refine the top backlog item" |
+| Design | `/design` | `@workspace #file:design.prompt.md` or describe: "Design the payment feature" |
+| Test & Dev | `/test-and-develop` | `@workspace #file:test-and-develop.prompt.md` or describe: "Start pairing" |
+| Deploy | `/deploy-and-validate` | `@workspace #file:deploy-and-validate.prompt.md` or describe: "Deploy to test" |
+| Release | `/release` | `@workspace #file:release.prompt.md` or describe: "Release to production" |
+
+For Copilot CLI specifically:
+```bash
+# Reference a prompt directly
+gh copilot chat --prompt-file .github/prompts/refine.prompt.md
+
+# Or just describe what you want (instructions route automatically)
+gh copilot chat "Let's refine the user onboarding feature"
+```
 
 ### Step 1: Connect to Discovery
 
 Link to your DiscoveryAccelerator output so the team can access industry context, domain model, and backlog:
 
 ```bash
+# Claude Code
 /ingest ~/path/to/DiscoveryAccelerator
+
+# Copilot Chat
+@workspace "Ingest discovery output from ~/path/to/DiscoveryAccelerator"
 ```
 
 SM will read the discovery output and build your initial backlog from validated proposals. You'll see a summary of what was ingested — features, constraints, architecture decisions, domain terms.
