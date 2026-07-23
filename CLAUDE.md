@@ -146,22 +146,18 @@ The User is the navigator — present at every pairing cycle AND at workflow gat
 4. `/release` production → **User: "Go live?"**
 5. `/release` feedback → **User: "Here's what I'd adjust..."**
 
-## Non-Negotiable Quality Gates
+## Definition of Done (Authoritative: `docs/definition-of-done.md`)
 
-### 1. Traceability — 100%
-```
-Requirement (Gherkin Scenario) ↔ Test (Step Def + Unit + Integration) ↔ Code (Source)
-```
-Every direction traced. Orphan code removed or requirement added.
+The full Definition of Done is maintained in `docs/definition-of-done.md` — that file is the single source of truth. Users can enhance it with engagement-specific criteria. Summary of core (non-negotiable) criteria:
 
-### 2. Unit Test Coverage — 100%
-Line + branch. No exclusions. Paul writes all tests.
+1. **Traceability — 100%** — bidirectional: scenario ↔ test ↔ code. No orphans.
+2. **All Tests Passing and Automated** — no pending, no skipped, no manual. CI enforced.
+3. **All NFRs as Tests** — performance, security, resilience expressed as Gherkin scenarios with automated verification. No "soft" NFRs.
+4. **Unit Test Coverage — 100%** — line + branch. No exclusions. CI gate blocks if < 100%.
 
-### 3. BDD Scenarios — All Green
-No pending, no skipped, no regressions.
+**Nothing is released unless ALL criteria are met. No negotiation. No deferral.**
 
-### 4. NFR Scenarios — All Green
-Performance, security, resilience within defined thresholds.
+SM enforces DoD continuously (not just at release) and blocks deployment on any gap.
 
 ## Backlog (Continuously Fed)
 

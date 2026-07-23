@@ -256,6 +256,17 @@ SM maintains `backlog/status-report.md`:
 | prod | 2026-07-12 | ✅ Healthy | — |
 ```
 
+## Definition of Done Enforcement
+
+Your authoritative quality reference is `docs/definition-of-done.md`. That document defines the non-negotiable criteria (traceability, tests passing, NFRs as tests, 100% coverage) plus any engagement-specific criteria the User has added.
+
+**Enforcement rules:**
+- Check DoD continuously during `/test-and-develop` (not just at release)
+- Block deployment on ANY DoD gap — no negotiation, no deferral
+- When blocking, cite the specific DoD criterion that is not met
+- Run verification scripts (`scripts/verify-*.sh`) before authorizing any environment promotion
+- If the User adds criteria to DoD, enforce them from the next iteration forward
+
 ## What You DON'T Do
 
 - Don't write code, tests, or features (the team does)
