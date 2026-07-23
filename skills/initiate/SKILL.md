@@ -1,0 +1,368 @@
+---
+name: initiate
+description: Initiation loop — capture engagement configuration (SDLC controls, environment access, team contacts, tooling, codebase patterns) that discovery doesn't provide. Prompted whenever context is missing.
+allowed-tools: [Read, Write, Edit, Bash, Agent, WebFetch, WebSearch]
+user-invocable: true
+---
+
+# /initiate — Engagement Initiation Loop
+
+The **Initiate** loop captures operational context that the DiscoveryAccelerator doesn't produce — the "how they build" alongside the "what to build." This runs at engagement start AND is triggered automatically whenever any loop detects missing context.
+
+## Two Modes
+
+- **Full initiation** (engagement start): SM walks through all context areas with User
+- **Gap fill** (mid-process): Any loop detects missing info → prompts User for just that piece
+
+## Context Areas
+
+### 1. Client SDLC Controls (`docs/engagement/sdlc-controls.md`)
+
+How this client builds and ships software:
+
+```markdown
+## Source Control
+- Git workflow: [trunk-based / GitFlow / feature-branch / other]
+- Branch protection: [rules]
+- PR review requirements: [N approvers, who]
+- Merge strategy: [squash / merge / rebase]
+
+## Change Management
+- Change approval process: [CAB / lightweight / none]
+- CAB cadence: [when it meets]
+- Lead time for changes: [N days]
+- Emergency change process: [expedited path]
+- Change template: [link or description]
+
+## Security Gates
+- AppSec review required: [yes/no, when]
+- Penetration testing: [frequency, who]
+- Vulnerability scanning: [tool, when it runs]
+- Code signing: [required? approach]
+
+## Quality Gates (Their Standards)
+- Code coverage threshold: [their standard — ours is 100%]
+- Static analysis: [tool, what blocks merge]
+- Dependency scanning: [tool, policy]
+- Performance testing: [when required, who runs]
+
+## Release Process
+- Release cadence: [continuous / weekly / sprint / scheduled]
+- Release windows: [if applicable]
+- Rollback authority: [who can approve]
+- Incident response: [process, contacts]
+```
+
+### 2. Environment Access (`docs/engagement/environments.md`)
+
+Infrastructure the team needs:
+
+```markdown
+## Cloud Account
+- Provider: [AWS / Azure / GCP / hybrid]
+- Account/subscription: [ID]
+- IAM access: [how devs get permissions]
+- Least-privilege model: [boundaries]
+
+## Environments Available
+| Environment | Purpose | Access | Provisioning |
+|---|---|---|---|
+| dev | Developer sandbox | [how to access] | [self-service / request] |
+| test | Integration testing | [how to access] | [who owns] |
+| staging | Pre-prod mirror | [how to access] | [who owns] |
+| prod | Production | [how to access] | [who deploys] |
+
+## Network & Connectivity
+- VPC / network topology: [description or diagram reference]
+- Egress restrictions: [what can reach the internet]
+- Service mesh / discovery: [if applicable]
+- DNS: [conventions, who manages]
+
+## Secrets & Certificates
+- Secret management: [Vault / Secrets Manager / other]
+- Certificate provisioning: [ACM / manual / Let's Encrypt]
+- Rotation policy: [frequency]
+- How dev team gets access to secrets: [process]
+
+## CI/CD Infrastructure
+- Pipeline platform: [GitHub Actions / CodePipeline / Jenkins / ADO / other]
+- Runner/agent: [hosted / self-hosted / client-managed]
+- Artifact registry: [ECR / Artifactory / other]
+- How to onboard a new pipeline: [process]
+```
+
+### 3. Codebase Patterns (`docs/engagement/codebase-patterns.md`)
+
+If extending an existing system (Scout found the high-level; this captures the hands-on detail):
+
+```markdown
+## Build & Tooling
+- Build tool: [Gradle / Maven / npm / pip / other]
+- Language version: [Java 17 / Node 20 / Python 3.12 / etc.]
+- Package manager: [specific version/lockfile approach]
+- Monorepo vs polyrepo: [structure]
+
+## Test Infrastructure (What Exists)
+- Test framework: [JUnit 5 / Jest / pytest / etc.]
+- Test utilities/helpers: [shared fixtures, custom assertions]
+- Mocking approach: [Mockito / jest.mock / unittest.mock]
+- Integration test approach: [testcontainers / embedded / real services]
+- Current coverage: [% and tool]
+
+## Code Conventions
+- Naming conventions: [file, class, method, variable]
+- Project structure: [package layout, module boundaries]
+- Error handling: [exceptions / Result types / error codes]
+- Logging: [framework, levels, format]
+- Documentation: [JSDoc / Javadoc / none / specific tool]
+
+## Shared Libraries & SDKs
+- Internal libraries: [list with purpose]
+- API clients: [generated? hand-written? shared?]
+- Common patterns: [base classes, decorators, middleware]
+
+## Database & Data
+- Database: [type, version]
+- Migration tool: [Flyway / Liquibase / Prisma / Alembic / etc.]
+- ORM: [Hibernate / Prisma / SQLAlchemy / none]
+- Connection management: [pooling, config]
+
+## Observability (What Exists)
+- Logging: [tool + destination]
+- Metrics: [tool + dashboards]
+- Tracing: [tool + instrumentation]
+- Alerting: [tool + notification channels]
+```
+
+### 4. Test Data Strategy (`docs/engagement/test-data.md`)
+
+How test data is sourced and managed:
+
+```markdown
+## Data Constraints
+- Can production data be used: [yes / no / anonymized only]
+- PII handling: [masking / tokenization / synthetic-only]
+- Data retention in test envs: [policy]
+- Regulatory constraints on test data: [GDPR / HIPAA / etc.]
+
+## Data Sources
+- Synthetic generation: [approach / tool]
+- Anonymized production snapshots: [if allowed, process]
+- Reference data: [where maintained, how refreshed]
+- Third-party test accounts: [sandbox APIs, credentials]
+
+## Data Management
+- Test database reset approach: [per-test / per-suite / manual]
+- Fixture strategy: [factories / seeders / snapshots]
+- Data volume for perf testing: [representative size]
+- Shared vs isolated test data: [approach]
+```
+
+### 5. Team Integration (`docs/engagement/team.md`)
+
+Who the dev team works with:
+
+```markdown
+## Client Contacts
+| Role | Person | Channel | Availability |
+|---|---|---|---|
+| Product owner / decisions | [name] | [Slack/Teams/email] | [hours/timezone] |
+| Technical lead / reviews | [name] | [channel] | [availability] |
+| Platform / infra | [name] | [channel] | [availability] |
+| Security / AppSec | [name] | [channel] | [availability] |
+| Release authority | [name] | [channel] | [availability] |
+
+## Communication
+- Primary channel: [Slack workspace/channel, Teams, etc.]
+- Async vs sync preference: [client's style]
+- Standup / ceremony expectations: [what they expect]
+- Escalation path: [when something is blocked]
+
+## Review & Approval
+- PR reviewers: [who, turnaround time expected]
+- Architecture review: [when needed, who]
+- Security review: [when needed, who, lead time]
+- Release approval: [who, what environment]
+
+## Handoff & Support
+- Documentation expectations: [runbooks? wiki? ADRs?]
+- Knowledge transfer plan: [when, format]
+- Production support model: [who owns after delivery]
+```
+
+### 6. Observability & Monitoring (`docs/engagement/observability.md`)
+
+How to monitor what we build:
+
+```markdown
+## Tools
+- Monitoring: [CloudWatch / Datadog / Grafana / Splunk / other]
+- Alerting: [PagerDuty / OpsGenie / Slack / other]
+- Logging: [CloudWatch Logs / ELK / Splunk / other]
+- Tracing: [X-Ray / Jaeger / OpenTelemetry / other]
+- APM: [tool if applicable]
+
+## Standards
+- SLOs/SLIs defined: [yes/no, where documented]
+- Dashboard templates: [exists? standard format?]
+- Log format: [structured JSON / plaintext / standard]
+- Correlation ID approach: [header name, propagation]
+- Alert severity levels: [P1-P4 definitions]
+
+## Targets for This Project
+- Availability target: [99.9% / 99.95% / etc.]
+- Latency target: [P50, P95, P99 thresholds]
+- Error rate target: [threshold]
+- Recovery time objective: [RTO]
+- Recovery point objective: [RPO]
+```
+
+### 7. Technical Debt & Known Issues (`docs/engagement/tech-debt.md`)
+
+Living document — grows over iterations:
+
+```markdown
+## Known Fragile Areas
+| Area | Risk | Mitigation |
+|---|---|---|
+| [component] | [what could break] | [approach — spike? extra tests?] |
+
+## Planned Deprecations
+| What | When | Impact on Our Work |
+|---|---|---|
+
+## Known Performance Bottlenecks
+| Where | Symptom | Root Cause (if known) |
+|---|---|---|
+
+## Low Coverage Areas (Higher Risk)
+| Area | Current Coverage | Risk |
+|---|---|---|
+
+## Pending Migrations
+| What | Timeline | Conflict with Our Work? |
+|---|---|---|
+```
+
+## The Initiation Loop
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  SM walks through each context area with User:          │
+│                                                         │
+│  For each area:                                         │
+│  ┌───────────────────────────────────────────────────┐  │
+│  │                                                   │  │
+│  │  1. SM asks targeted questions about this area    │  │
+│  │     (not a form dump — conversational)            │  │
+│  │                                                   │  │
+│  │  2. User provides what they know                  │  │
+│  │     (partial answers are fine)                    │  │
+│  │                                                   │  │
+│  │  3. SM documents answers in the appropriate file  │  │
+│  │                                                   │  │
+│  │  4. SM flags gaps:                                │  │
+│  │     "I don't have [X] yet. We'll need it for     │  │
+│  │      [loop]. I'll prompt you when we get there."  │  │
+│  │                                                   │  │
+│  │  5. Move to next area                             │  │
+│  │                                                   │  │
+│  └───────────────────────────────────────────────────┘  │
+│                                                         │
+│  After all areas covered:                               │
+│  SM summarizes: "Here's what I have, here's what's      │
+│  missing, here's when we'll need it."                   │
+│                                                         │
+│  User approves: "Good enough to start."                 │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+## Gap-Fill Mode (Triggered by Other Loops)
+
+When ANY loop needs context that doesn't exist in `docs/engagement/`:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                                                         │
+│  [Any loop running]                                     │
+│                                                         │
+│  Loop checks: "Do I have what I need?"                  │
+│    → Reads docs/engagement/<area>.md                   │
+│    → Finds missing field or entire file missing         │
+│                                                         │
+│  Prompt to User:                                        │
+│  "I'm in /design and I need to know [specific thing]   │
+│  to proceed. Specifically: [question]."                 │
+│                                                         │
+│  Options:                                               │
+│  1. User provides the answer → SM documents it         │
+│  2. User says "skip for now" → SM flags as assumption  │
+│     and continues with a stated default                 │
+│  3. User says "I'll find out" → SM parks this,         │
+│     continues what can proceed, and asks again later    │
+│                                                         │
+│  If User chose "skip" → SM documents the assumption:   │
+│  "ASSUMED: [thing]. Based on: [default reasoning].     │
+│   Override when actual answer is known."                │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+## Context Check Protocol (Every Loop Must Follow)
+
+Every loop, before starting substantive work, runs this check:
+
+```
+CONTEXT CHECK for /[loop-name]:
+
+Required context:
+  □ docs/engagement/sdlc-controls.md — [specific fields needed]
+  □ docs/engagement/environments.md — [specific fields needed]
+  □ docs/engagement/codebase-patterns.md — [specific fields needed]
+  □ docs/engagement/test-data.md — [specific fields needed]
+  □ docs/engagement/team.md — [specific fields needed]
+  □ docs/engagement/observability.md — [specific fields needed]
+  □ docs/discovery/context-package.md — [specific fields needed]
+
+Status:
+  ✅ Available: [list]
+  ⚠️ Assumed (default): [list with stated assumptions]
+  ❌ Missing (must ask User): [list — BLOCKS until answered]
+```
+
+## What Each Loop Needs from Engagement Context
+
+| Loop | SDLC | Envs | Codebase | Test Data | Team | Observability | Tech Debt |
+|---|---|---|---|---|---|---|---|
+| /refine | — | — | — | — | Product contact | — | Known risks |
+| /spike | — | Sandbox | Existing patterns | — | Tech lead | — | Fragile areas |
+| /design | — | Target arch | Full patterns | Strategy | Reviewers | Tools + targets | Full map |
+| /test-and-develop | Review rules | Test env | Test infra | Full strategy | Reviewers | — | Coverage map |
+| /deploy-and-validate | Full SDLC | All envs | CI/CD patterns | Env data | Platform team | Full setup | — |
+| /release | Change mgmt | Prod access | — | — | Release authority | Monitoring | — |
+
+## Living Knowledge (Grows Over Iterations)
+
+After each iteration, SM updates `docs/engagement/` with what was learned:
+- New codebase patterns discovered (→ `codebase-patterns.md`)
+- Technical debt found (→ `tech-debt.md`)
+- Test data approaches that work (→ `test-data.md`)
+- Observability gaps filled (→ `observability.md`)
+- New team contacts identified (→ `team.md`)
+
+This means `/initiate` is never truly "done" — it runs fully at start, then enriches continuously.
+
+## Invocation
+
+```bash
+/initiate                          — Full initiation (engagement start)
+/initiate --area sdlc              — Focus on one area
+/initiate --area environments      — Focus on one area
+/initiate --area codebase          — Focus on one area
+/initiate --area test-data         — Focus on one area
+/initiate --area team              — Focus on one area
+/initiate --area observability     — Focus on one area
+/initiate --status                 — Show what's captured, what's missing, what's assumed
+/initiate --assumptions            — Show all stated assumptions (need validation)
+```

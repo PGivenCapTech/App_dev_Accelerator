@@ -9,6 +9,18 @@ user-invocable: true
 
 The **Design** loop produces the technical design — the "how" — for a feature that has passed /refine. This is FDD's "Design by Feature" step: domain model updates, event flows, component design, API contracts, and NFR strategy. Design is done BEFORE test-and-develop, so Paul and Dmitri have clear guidance.
 
+## Context Check (Before Starting)
+
+Before starting design, verify:
+- `docs/engagement/environments.md` — Target architecture and deployment topology
+- `docs/engagement/codebase-patterns.md` — Full patterns (build, test, conventions, shared libs)
+- `docs/engagement/test-data.md` — Data strategy (affects design of test interfaces)
+- `docs/engagement/observability.md` — Monitoring tools and targets (affects instrumentation design)
+- `docs/engagement/tech-debt.md` — Full debt map (design around fragile areas)
+- `docs/engagement/team.md` — Architecture reviewers (who approves the design)
+
+If ANY required context is missing → prompt User (see `/initiate` gap-fill protocol).
+
 ## Participants
 
 | Role | Agent | Contribution |

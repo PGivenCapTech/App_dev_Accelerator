@@ -9,6 +9,15 @@ user-invocable: true
 
 The **Spike** loop is a time-boxed investigation that answers a specific question or validates a specific assumption. It produces **evidence and a decision**, not production code. Spikes are created during /refine when the team encounters unknowns.
 
+## Context Check (Before Starting)
+
+Before starting a spike, verify:
+- `docs/engagement/environments.md` — Sandbox/dev environment access for prototyping
+- `docs/engagement/codebase-patterns.md` — Existing patterns (don't spike what already exists)
+- `docs/engagement/team.md` — Technical lead (who to validate findings with)
+
+If ANY required context is missing → prompt User (see `/initiate` gap-fill protocol).
+
 ## Participants
 
 | Role | Agent | Contribution |

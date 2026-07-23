@@ -9,6 +9,15 @@ user-invocable: true
 
 The **Refine** loop takes a raw backlog item and works it collaboratively until it meets the Definition of Ready. This is BDD's "Discovery" workshop — the team explores the behavior through examples BEFORE anyone writes code or tests.
 
+## Context Check (Before Starting)
+
+Before starting refinement, verify engagement context is available:
+- `docs/engagement/team.md` — Product contact (who clarifies business questions?)
+- `docs/engagement/tech-debt.md` — Known fragile areas (affects risk assessment)
+- `docs/discovery/context-package.md` — Domain terms, personas, constraints
+
+If ANY required context is missing → prompt User (see `/initiate` gap-fill protocol).
+
 ## Participants (Three Amigos + User)
 
 | Role | Agent | Contribution |

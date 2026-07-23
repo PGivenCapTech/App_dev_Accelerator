@@ -9,6 +9,18 @@ user-invocable: true
 
 The **Test & Develop** loop is where code gets written. Paul and Dmitri work as a **pair** with the User as navigator — tight ping-pong TDD cycles, outside-in from BDD scenarios, every test/implementation pair presented to the User for approval.
 
+## Context Check (Before Starting)
+
+Before starting test-and-develop, verify:
+- `docs/engagement/codebase-patterns.md` — Test framework, conventions, shared utilities
+- `docs/engagement/test-data.md` — Full strategy (factories, PII handling, volumes)
+- `docs/engagement/environments.md` — Test environment access for integration tests
+- `docs/engagement/sdlc-controls.md` — PR review rules (who reviews, merge policy)
+- `docs/engagement/team.md` — Reviewers (who will review PRs)
+- `docs/engagement/tech-debt.md` — Low coverage areas (extra caution needed)
+
+If ANY required context is missing → prompt User (see `/initiate` gap-fill protocol).
+
 ## Participants (Pair + Navigator)
 
 | Role | Agent | Contribution |

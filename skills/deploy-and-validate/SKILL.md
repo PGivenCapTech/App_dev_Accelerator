@@ -9,6 +9,19 @@ user-invocable: true
 
 The **Deploy & Validate** loop pushes code through environments and validates at each level. If validation fails at any environment, the loop cycles back — fix, re-validate, then promote. User approves each promotion.
 
+## Context Check (Before Starting)
+
+Before starting deployment, verify:
+- `docs/engagement/sdlc-controls.md` — Full SDLC (change management, security gates, release windows)
+- `docs/engagement/environments.md` — All environments (access, provisioning, network, secrets)
+- `docs/engagement/codebase-patterns.md` — CI/CD patterns (existing pipeline structure)
+- `docs/engagement/observability.md` — Full monitoring setup (dashboards, alerts, thresholds)
+- `docs/engagement/team.md` — Platform team contacts, release authority
+- `docs/engagement/test-data.md` — Environment-specific data seeding
+
+If ANY required context is missing → prompt User (see `/initiate` gap-fill protocol).
+**Deploy is the most context-heavy loop — most gaps will surface here.**
+
 ## Participants
 
 | Role | Agent | Contribution |

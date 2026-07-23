@@ -4,6 +4,7 @@
   "description": "XP + BDD + FDD development team. Workflows: /new-feature, /fix-defect, /refactor. Loops: /refine, /spike, /design, /test-and-develop, /deploy-and-validate, /release. Connection: /ingest, /challenge. Enforces 100% traceability + coverage.",
   "author": "CapTech",
   "skills": [
+    "initiate",
     "refine",
     "spike",
     "design",

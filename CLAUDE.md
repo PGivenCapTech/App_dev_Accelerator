@@ -43,12 +43,35 @@ Three named workflows compose the loops differently:
 | `/deploy-and-validate` | Push through environments, validate each | Loop back on failure, User approves promotions |
 | `/release` | Production + feedback | Blue/green, smoke, iteration closure |
 
-## Connection Skills
+## Initiation & Connection Skills
 
 | Skill | Purpose |
 |---|---|
+| `/initiate` | Capture engagement context (SDLC, environments, codebase, team, test data, observability) |
 | `/ingest` | Bootstrap from DiscoveryAccelerator or refresh with updates |
 | `/challenge` | Feed implementation learnings back to discovery team |
+
+## Context-Check Protocol (MANDATORY — Every Loop)
+
+Every loop, before starting substantive work, checks for required engagement context. If missing:
+
+1. **Prompt the User** — "I need [specific thing] to proceed. Can you provide it?"
+2. **User provides** → SM documents in `docs/engagement/<area>.md`
+3. **User says "skip"** → SM states an assumption and continues with a default
+4. **User says "I'll find out"** → SM parks, continues what's possible, asks again later
+
+**Engagement context lives in `docs/engagement/`:**
+- `sdlc-controls.md` — Git workflow, change management, security gates, review process
+- `environments.md` — Cloud accounts, access, network, secrets, CI/CD
+- `codebase-patterns.md` — Build tooling, test frameworks, conventions, shared libraries
+- `test-data.md` — Data constraints, sources, synthetic generation, PII handling
+- `team.md` — Client contacts, communication channels, review/approval people
+- `observability.md` — Monitoring tools, alerting, SLOs, log/trace/metric standards
+- `tech-debt.md` — Known risks, fragile areas, low coverage zones (grows over iterations)
+
+**Stated assumptions** (from "skip") are tracked and must be validated before `/release`. An assumption that reaches production without validation is a risk SM must flag.
+
+**Living knowledge**: After each iteration, SM updates `docs/engagement/` with what was learned. This context accumulates — `/initiate` is never "done."
 
 ## How the Team Works (XP + BDD + FDD)
 

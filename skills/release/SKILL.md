@@ -9,6 +9,17 @@ user-invocable: true
 
 The **Release** loop handles the final step — deploying to production with full safety, verifying health, and collecting post-iteration feedback to feed the next cycle. This closes the iteration.
 
+## Context Check (Before Starting)
+
+Before starting release, verify:
+- `docs/engagement/sdlc-controls.md` — Change management (CAB, lead time, emergency process)
+- `docs/engagement/environments.md` — Production access, deploy mechanism
+- `docs/engagement/observability.md` — Production monitoring, alerting, rollback triggers
+- `docs/engagement/team.md` — Release authority (who approves prod), incident response contacts
+
+If ANY required context is missing → prompt User (see `/initiate` gap-fill protocol).
+**Release CANNOT proceed with assumptions on change management or prod access — these must be confirmed.**
+
 ## Participants
 
 | Role | Agent | Contribution |
