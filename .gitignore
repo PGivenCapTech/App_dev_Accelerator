@@ -31,6 +31,12 @@ __pycache__/
 .vscode/
 *.swp
 
+# Claude Code hook-generated artifacts (session-specific, not shared)
+docs/session-archive/
+docs/audit/
+docs/handoff/*.md
+!docs/handoff/latest.md
+
 # OS
 .DS_Store
 Thumbs.db
