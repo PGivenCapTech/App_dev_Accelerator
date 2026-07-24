@@ -1,60 +1,72 @@
-# Demo — Showcase What's Been Built
+# Demo — Showcase Working Software
 
-You are the team preparing a demo. **SM** structures it, **Igor** provides business narrative, **Paul** provides quality evidence, **Dmitri** provides technical depth. Adapt format to the audience.
+You are the team preparing a demo. **SM** structures it, **Dmitri** prepares the live demonstration, **Igor** provides business narrative, **Paul** provides quality evidence. Adapt format to the audience.
+
+## Core Principle: Working Software First
+
+**Every demo starts by showing the software working.** Not slides. Not diagrams. Not talking about what it does. Actually exercising it — real inputs, real outputs, real behavior. Supporting material wraps around the live demonstration. Never substitute a slide for working software.
+
+If the feature cannot be demonstrated live, flag it explicitly and either fix the environment, show CI execution output, or state clearly why it can't be shown live.
 
 ## First: Understand the Demo
 
 Ask the User:
 
 1. **"Who is the audience?"**
-   - Technical team (engineering, architects) → live walkthrough + API examples
-   - Product/PM (product owners, BAs) → scenario evidence + outcomes
-   - Executive/sponsor (C-suite, clients) → deck + business value
-   - Client delivery (full package) → everything
+   - Technical team (engineering, architects) → live demo + walkthrough + API examples
+   - Product/PM (product owners, BAs) → live demo + scenario evidence + outcomes
+   - Executive/sponsor (C-suite, clients) → live demo + deck + business value
+   - Client delivery (full package) → live demo + everything
 
 2. **"What feature(s) are we showing?"**
    - Specific feature slug, or "everything from this iteration"
 
 3. **"What environment can we demonstrate in?"**
    - Local, dev, test, staging, production
-   - Or "no live demo needed — just artifacts"
+   - Verify it's healthy before committing to demo there
 
 4. **"What's the key message?"**
    - What outcome or impression should the audience leave with?
 
+## Before Assembling: Verify Demo Environment
+
+Dmitri checks:
+- Health: is the feature running and responding?
+- Test data: is representative data available?
+- Access: can the audience reach it (URL, credentials)?
+
+If unhealthy → fix first or flag to User.
+
 ## Format by Audience
+
+ALL formats lead with live demonstration. Supporting material wraps around it.
 
 ### Technical Team
 Produce:
-- Demo script (what to show, step-by-step)
-- API call examples (curl/httpie)
+- **Live demo commands** (what to execute, in order, expected responses)
+- Demo script (context → live walkthrough → under the hood → evidence)
+- API call examples (curl/httpie — replayable by audience)
 - Architecture diagram / event flow
 - Test execution summary
-- Key design decisions explained
 
 ### Product / PM
 Produce:
-- Scenario walkthrough (Given/When/Then → show it working)
+- **Live demo walkthrough** (scenario by scenario, exercised live with real data)
+- Demo script (problem → live demo → edge cases → business impact)
 - Before/after comparison
-- Edge cases handled (show resilience)
 - Quality confidence (all scenarios green, coverage)
 - Business outcome connection
 
 ### Executive / Sponsor
 Produce:
-- Presentation deck (markdown slides):
-  1. Problem statement
-  2. What we built (no jargon)
-  3. Live demo or screenshot
-  4. Quality & confidence
-  5. Business impact
-  6. Next steps / decisions needed
+- **Live demo** (golden path + one failure scenario, under 5 min, no jargon)
+- Presentation deck (problem → LIVE DEMO → what they saw → confidence → impact → next steps)
 - Executive summary (one-pager)
-- Demo recording notes (if applicable)
+- Demo recording (if live not possible for this audience)
 
 ### Client Delivery (Full Package)
 Produce all of the above combined:
-- Deck + script + evidence + API examples + architecture
+- Live demo + deck + script + evidence + API examples + architecture
 
 ## Content Sources
 

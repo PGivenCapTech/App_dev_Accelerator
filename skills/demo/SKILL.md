@@ -30,6 +30,19 @@ The **Demo** loop produces a showcase of working software tailored to the audien
 | **Business value** | Igor | What problem it solves, for whom, what outcomes |
 | **Navigator** | User | Directs focus, identifies audience, approves output |
 
+## Core Principle: Working Software First
+
+**Every demo starts by showing the software working.** Not slides. Not diagrams. Not talking about what it does. Actually exercising it — real inputs, real outputs, real behavior.
+
+Supporting material (decks, evidence, architecture) wraps around the live demonstration. The live demo is the centerpiece; everything else supports it.
+
+If the feature cannot be demonstrated live (environment down, dependency unavailable), SM must flag this to the User and either:
+- Fix the environment and demo live
+- Show a recorded run from CI (test execution output as evidence)
+- State clearly: "We cannot show this live right now because [reason]"
+
+**Never substitute a slide for working software.**
+
 ## The Loop
 
 ```
@@ -41,24 +54,35 @@ The **Demo** loop produces a showcase of working software tailored to the audien
 │     "What environment can we demonstrate in?"              │
 │     "What's the key message / outcome you want?"           │
 │                                                             │
-│  2. SM selects format based on audience                     │
-│     → Technical team: live walkthrough + script            │
-│     → Product/PM: scenario evidence + outcomes             │
-│     → Executive/sponsor: deck + business value             │
-│     → Client delivery: full package (deck + evidence)      │
+│  2. SM verifies the demo environment                        │
+│     → Health check: is the feature running and healthy?    │
+│     → Test data: is representative data available?         │
+│     → Access: can the audience see it (URL, credentials)?  │
+│     → If unhealthy: fix first or use CI recording as       │
+│       fallback (flag to User)                              │
+│                                                             │
+│  3. SM selects format based on audience                     │
+│     ALL formats start with live demonstration:             │
+│     → Technical team: live demo + walkthrough script       │
+│     → Product/PM: live demo + scenario evidence            │
+│     → Executive/sponsor: live demo + deck + business value │
+│     → Client delivery: live demo + full package            │
 │     → User approves format                                 │
 │                                                             │
-│  3. Team assembles the demo content                         │
+│  4. Team assembles the demo content                         │
+│     Dmitri: prepares live demo (endpoints, test data,      │
+│       commands to exercise the feature)                    │
 │     Igor: business narrative (problem → solution → outcome)│
 │     Paul: quality evidence (tests, coverage, NFRs)         │
-│     Dmitri: technical walkthrough (architecture, API)      │
 │     SM: structures into chosen format                      │
 │                                                             │
-│  4. SM presents draft to User                               │
-│     "Here's the demo package. Anything to adjust?"        │
+│  5. SM presents draft to User                               │
+│     "Here's the demo package. The live demo will show      │
+│      [scenarios]. Supporting material covers [X].          │
+│      Anything to adjust?"                                  │
 │     → User approves / adjusts focus / adds context        │
 │                                                             │
-│  5. Finalize and deliver                                    │
+│  6. Finalize and deliver                                    │
 │     → Write output artifacts to backlog/<slug>/demo/       │
 │     → User: "Ready to present."                           │
 │                                                             │
@@ -69,7 +93,7 @@ The **Demo** loop produces a showcase of working software tailored to the audien
 
 ### Technical Team (Engineering, Architects)
 
-**Format:** Live walkthrough script + API examples
+**Format:** Live demo first → then walkthrough + API examples
 
 **Content:**
 ```
@@ -79,19 +103,19 @@ Feature: [name]
 Environment: [where to show it]
 Duration: ~15 minutes
 
-1. CONTEXT (2 min)
-   - What problem, for whom
-   - Key design decisions (why this approach)
+1. BRIEF CONTEXT (1 min)
+   - What problem, for whom (just enough to frame the demo)
 
-2. LIVE WALKTHROUGH (8 min)
-   - Scenario 1: [happy path] — show the API call, response, events published
-   - Scenario 2: [edge case] — show error handling, validation
-   - Scenario 3: [NFR] — show performance under load / resilience on failure
+2. LIVE DEMONSTRATION (8 min) ← THE MAIN EVENT
+   - Scenario 1: [happy path] — execute the API call live, show response, show events
+   - Scenario 2: [edge case] — trigger error handling live, show validation
+   - Scenario 3: [NFR] — show performance under load / trigger failure + recovery
+   - Let the audience see it working, not hear about it working
 
-3. UNDER THE HOOD (3 min)
+3. UNDER THE HOOD (4 min)
    - Architecture diagram
-   - Event flow
-   - Key code paths (not line-by-line — structural)
+   - Event flow (what they just saw happening)
+   - Key design decisions (why this approach)
 
 4. QUALITY EVIDENCE (2 min)
    - Test suite: X scenarios, Y unit tests, all green
@@ -100,14 +124,14 @@ Duration: ~15 minutes
    - NFR results: [P95 latency, error rates, etc.]
 
 Supporting artifacts:
-  - API call examples (curl/httpie commands)
+  - API call examples (curl/httpie commands — replayable by audience)
   - Event flow diagram
   - Test execution summary
 ```
 
 ### Product / PM (Product Owners, Business Analysts)
 
-**Format:** Scenario walkthrough + outcome evidence
+**Format:** Live demo first → then scenario evidence + outcomes
 
 **Content:**
 ```
@@ -117,25 +141,26 @@ Feature: [name]
 Business outcome: [what this enables]
 Duration: ~10 minutes
 
-1. THE PROBLEM (2 min)
+1. THE PROBLEM (1 min)
    - Who experiences it (persona)
    - What they can't do today
-   - Business impact of not solving
 
-2. THE SOLUTION (5 min)
-   - Scenario by scenario (Given/When/Then → show it working)
-   - For each: "As [persona], I can now [action], which means [outcome]"
-   - Show real data flowing through real scenarios
+2. LIVE DEMONSTRATION (6 min) ← THE MAIN EVENT
+   - Show the feature working, scenario by scenario
+   - For each: "As [persona], watch them [action]..." → execute live
+   - Use realistic data that the audience recognizes
+   - Show the outcome, not the implementation
+   - Include at least one "what if it goes wrong" scenario live
 
-3. EDGE CASES HANDLED (2 min)
-   - What could go wrong → show the system handles it gracefully
-   - Security: unauthorized access prevented
-   - Resilience: dependency failure handled
+3. EDGE CASES + CONFIDENCE (2 min)
+   - Security: show unauthorized access being prevented live
+   - Resilience: show graceful handling of failure
+   - All acceptance criteria met (green scenarios)
 
-4. CONFIDENCE (1 min)
-   - All acceptance criteria met (show green scenarios)
-   - Performance meets targets
+4. BUSINESS IMPACT (1 min)
+   - What this unlocks for the business
    - Ready for [environment/users]
+   - Performance meets targets
 
 Supporting artifacts:
   - Scenario-by-scenario evidence (pass/fail with details)
@@ -145,7 +170,7 @@ Supporting artifacts:
 
 ### Executive / Sponsor (C-suite, Client Leadership)
 
-**Format:** Presentation deck + summary
+**Format:** Brief context → live demo → deck wraps around it
 
 **Content:**
 ```
@@ -156,16 +181,19 @@ Slides:
 1. TITLE
    [Feature name] — [one-line business outcome]
 
-2. THE PROBLEM
+2. THE PROBLEM (1 slide)
    [Persona] can't [action] because [constraint]
    Impact: [business cost / risk / missed opportunity]
 
-3. WHAT WE BUILT
-   [2-3 bullet capabilities, no jargon]
-   Screenshot or diagram of the user experience
-
-4. LIVE DEMONSTRATION (optional — or link to recording)
+3. LIVE DEMONSTRATION (the centerpiece — NOT optional)
    Show the golden path: user does [action], system responds with [outcome]
+   Keep it under 5 minutes. No jargon. Show what the user sees.
+   One happy path + one "what if it breaks" scenario.
+   If executives can't be in the room: record and embed.
+
+4. WHAT THEY JUST SAW
+   [2-3 bullet capabilities, translating the demo into business terms]
+   "What you just saw means [business outcome]"
 
 5. QUALITY & CONFIDENCE
    - Fully tested (N scenarios, 100% coverage)
@@ -186,7 +214,7 @@ Slides:
 Supporting artifacts:
   - Slide deck (markdown or PowerPoint-ready)
   - Executive summary (one-pager)
-  - Demo recording link (if applicable)
+  - Demo recording (if live not possible)
 ```
 
 ### Client Delivery (Full Package)
