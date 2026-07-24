@@ -39,7 +39,7 @@ for pattern in "${BLOCKED_PATTERNS[@]}"; do
       "hookSpecificOutput": {
         "hookEventName": "PreToolUse",
         "permissionDecision": "deny",
-        "permissionDecisionReason": "Blocked: destructive operation matching [" + $pattern + "]. Use a safer alternative or get explicit User approval first."
+        "permissionDecisionReason": "Blocked: destructive operation matching [\($pattern)]. Use a safer alternative or get explicit User approval first."
       }
     }'
     exit 2
@@ -80,7 +80,7 @@ if echo "$CMD" | grep -qE "^git commit"; then
         "hookSpecificOutput": {
           "hookEventName": "PreToolUse",
           "permissionDecision": "deny",
-          "permissionDecisionReason": "Commit message does not follow convention.\n\nExpected: <type>(<scope>): <description>\nTypes: feat, fix, refactor, test, infra, docs, retro\nScope: scenario slug or area name\n\nGot: \"" + $msg + "\"\n\nExample: feat(user-onboarding): add email validation step"
+          "permissionDecisionReason": "Commit message does not follow convention.\n\nExpected: <type>(<scope>): <description>\nTypes: feat, fix, refactor, test, infra, docs, retro\nScope: scenario slug or area name\n\nGot: \"\($msg)\"\n\nExample: feat(user-onboarding): add email validation step"
         }
       }'
       exit 2

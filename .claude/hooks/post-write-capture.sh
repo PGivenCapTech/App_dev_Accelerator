@@ -102,6 +102,6 @@ EOF
 jq -n --arg cat "$CATEGORY" --arg path "$RELATIVE_PATH" '{
   "hookSpecificOutput": {
     "hookEventName": "PostToolUse",
-    "additionalContext": "Decision logged: " + $cat + " — " + $path
+    "additionalContext": "Decision logged: \($cat) — \($path)"
   }
 }'

@@ -124,5 +124,5 @@ cp "$HANDOFF_FILE" "$ARCHIVE_FILE"
 ls -t "$HANDOFF_DIR"/*.md 2>/dev/null | grep -v "latest.md" | tail -n +21 | xargs rm -f 2>/dev/null || true
 
 jq -n --arg file "docs/handoff/latest.md" '{
-  "systemMessage": "Session handoff written to " + $file + ". Next session will have full context to resume."
+  "systemMessage": "Session handoff written to \($file). Next session will have full context to resume."
 }'

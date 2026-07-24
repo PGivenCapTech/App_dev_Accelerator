@@ -90,5 +90,5 @@ EOF
 
 # Output: inject a system message so Claude knows the archive exists
 jq -n --arg file "$ARCHIVE_FILE" '{
-  "systemMessage": "Session context archived to " + $file + " before compaction. Key decisions and assumptions preserved."
+  "systemMessage": "Session context archived to \($file) before compaction. Key decisions and assumptions preserved."
 }'

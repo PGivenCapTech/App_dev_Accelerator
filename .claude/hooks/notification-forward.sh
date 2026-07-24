@@ -72,13 +72,13 @@ if [[ -n "$WEBHOOK_URL" ]]; then
       --arg branch "$BRANCH" \
       --arg urgency "$URGENCY" \
       '{
-        text: "[" + $urgency + "] " + $title,
+        text: "[\($urgency)] \($title)",
         blocks: [
           {
             type: "section",
             text: {
               type: "mrkdwn",
-              text: "*" + $title + "*\n" + $msg + "\n_Branch: " + $branch + "_"
+              text: "*\($title)*\n\($msg)\n_Branch: \($branch)_"
             }
           }
         ]
