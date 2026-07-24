@@ -95,6 +95,47 @@ For each system, capture: tool name, URL, access method, sync direction, integra
 - Known performance bottlenecks
 - Pending migrations that might conflict
 
+### 9. Repository Governance (Platform-Level Enforcement)
+
+**The first team on a repo owns setting this up for ALL users.**
+
+After SDLC controls are captured and the repo exists, configure platform controls that enforce the branching strategy for everyone — including developers not using this AI tool.
+
+See `docs/repository-governance.md` for full reference.
+
+**Ask:**
+- "Does this repo already have branch protection?"
+- "Who should own CODEOWNERS?"
+- "Any org-level restrictions on repo settings?"
+
+**Configure (via GitHub CLI or equivalent):**
+
+| Control | Default |
+|---|---|
+| Branch protection | Main: no direct push, PR + CI required |
+| Required status checks | build, test, coverage-gate, traceability-gate, security-scan |
+| Merge method | Squash-only, auto-delete branches |
+| Branch naming | `feature/`, `fix/`, `refactor/` + kebab-case |
+| PR template | `.github/pull_request_template.md` |
+| CODEOWNERS | Quality gates → SM, pipeline → SM + leads |
+| Commit message linting | `<type>(<scope>): <description>` — CI check |
+
+**Adapt to existing controls:** Preserve client's existing rules, ADD quality gates alongside. If org policies block configuration, document what's missing and track as a gap.
+
+**Verify before moving on:**
+```
+GOVERNANCE CHECK:
+  ✅ Main branch protected
+  ✅ PR + approval required
+  ✅ Status checks registered
+  ✅ Squash merge only
+  ✅ Auto-delete branches
+  ✅ Branch naming enforced
+  ✅ PR template exists
+  ✅ CODEOWNERS configured
+  ⚠️ [Anything that couldn't be set — with reason]
+```
+
 ## User Options When Asked
 
 For anything they don't know:
@@ -124,6 +165,16 @@ docs/engagement/
   systems-of-record.md    — External systems, sync direction, integration points
   tech-debt.md            — Known risks (grows over iterations)
 ```
+
+Plus platform-level configuration:
+```
+.github/
+  pull_request_template.md  — PR template with scenario reference + quality checklist
+  CODEOWNERS                — Ownership rules based on team.md
+  rulesets/                 — Branch protection rules (if exported)
+```
+
+And GitHub repo settings configured via CLI (branch protection, merge method, status checks).
 
 ## Invocation Variants
 

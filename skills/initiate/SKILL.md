@@ -382,13 +382,70 @@ Living document — grows over iterations:
 |---|---|---|
 ```
 
+### 9. Repository Governance (Platform-Level Enforcement)
+
+**The first team to use the accelerator on a repo owns setting up governance for ALL users.**
+
+This enforces the branching strategy, quality gates, and contribution standards at the platform level — not just inside the AI tool. Non-AI users, new team members, and future teams on the same repo all inherit these controls automatically.
+
+See `docs/repository-governance.md` for full reference.
+
+**When to configure:** After SDLC controls are captured (Area 1) — governance builds on those decisions. After the repo exists (post-`/bootstrap` or on an existing repo).
+
+**SM asks:**
+```
+1. "Does this repo already have branch protection rules?"
+   → Yes: SM reads existing rules, proposes additions (our quality gates alongside theirs)
+   → No: SM configures from scratch using defaults
+
+2. "Who should own CODEOWNERS for quality gates and pipeline?"
+   → SM creates CODEOWNERS based on team.md contacts
+
+3. "Any restrictions on the repo settings I should know about?"
+   → Org-level policies may prevent some settings. SM adapts.
+```
+
+**Dmitri configures (via GitHub CLI or equivalent):**
+
+| Control | What Gets Set | Default |
+|---|---|---|
+| Branch protection | Main: no direct push, PR required, CI must pass | GitHub Ruleset or branch protection rule |
+| Required status checks | `build`, `test`, `coverage-gate`, `traceability-gate`, `security-scan` | All required before merge |
+| Merge method | Squash-only, auto-delete branches | Disable merge commits + rebase |
+| Branch naming | `feature/`, `fix/`, `refactor/` + kebab-case slug | Enforced via Ruleset pattern |
+| PR template | Scenario reference, test evidence, quality checklist | `.github/pull_request_template.md` |
+| CODEOWNERS | Quality gates → SM, pipeline → SM + leads, engagement → SM | Based on `docs/engagement/team.md` |
+| Commit message linting | `<type>(<scope>): <description>` — scope must reference scenario slug | CI check (commitlint or equivalent) |
+
+**Adapting to existing controls:**
+- If the client already has branch protection: preserve their rules, ADD our quality gates alongside
+- If the client has different naming conventions: adopt theirs, but quality gates are non-negotiable
+- If org policies prevent certain settings: SM documents what couldn't be configured and why
+
+**Verification (SM confirms before moving on):**
+```
+GOVERNANCE CHECK:
+  ✅ Main branch protected (no direct push)
+  ✅ PR required for merge
+  ✅ At least 1 approval required
+  ✅ Status checks registered: [list]
+  ✅ Squash merge only (or client override documented)
+  ✅ Auto-delete branches enabled
+  ✅ Branch naming enforced
+  ✅ PR template exists
+  ✅ CODEOWNERS configured
+  ⚠️ [Any items that couldn't be configured — reason + mitigation]
+```
+
+**If configuration partially fails** (permissions, org policy): SM documents what's in place and what the User needs to request from their platform team. This becomes a tracked gap — not a silent omission.
+
 ## The Initiation Loop
 
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  SM walks through each context area with User:          │
 │                                                         │
-│  For each area:                                         │
+│  For each area (1-8):                                   │
 │  ┌───────────────────────────────────────────────────┐  │
 │  │                                                   │  │
 │  │  1. SM asks targeted questions about this area    │  │
@@ -407,7 +464,30 @@ Living document — grows over iterations:
 │  │                                                   │  │
 │  └───────────────────────────────────────────────────┘  │
 │                                                         │
-│  After all areas covered:                               │
+│  After context areas captured:                          │
+│                                                         │
+│  Repository Governance (Area 9):                        │
+│  ┌───────────────────────────────────────────────────┐  │
+│  │                                                   │  │
+│  │  SM asks: "Does this repo have branch protection?"│  │
+│  │                                                   │  │
+│  │  Dmitri configures platform controls:             │  │
+│  │    - Branch protection / rulesets                  │  │
+│  │    - Required status checks                       │  │
+│  │    - Merge method (squash-only)                   │  │
+│  │    - Auto-delete branches                         │  │
+│  │    - Branch naming rules                          │  │
+│  │    - PR template                                  │  │
+│  │    - CODEOWNERS                                   │  │
+│  │    - Commit message linting                       │  │
+│  │                                                   │  │
+│  │  SM runs GOVERNANCE CHECK verification            │  │
+│  │  SM reports: "Governance configured. All pushes   │  │
+│  │    to main now require PR + CI + approval."       │  │
+│  │                                                   │  │
+│  └───────────────────────────────────────────────────┘  │
+│                                                         │
+│  After all areas + governance:                          │
 │  SM summarizes: "Here's what I have, here's what's      │
 │  missing, here's when we'll need it."                   │
 │                                                         │
@@ -472,14 +552,14 @@ Status:
 
 ## What Each Loop Needs from Engagement Context
 
-| Loop | SDLC | Envs | Codebase | Test Data | Team | Observability | Tech Debt | Systems of Record |
-|---|---|---|---|---|---|---|---|---|
-| /refine | — | — | — | — | Product contact | — | Known risks | Requirements (Jira) |
-| /spike | — | Sandbox | Existing patterns | — | Tech lead | — | Fragile areas | — |
-| /design | — | Target arch | Full patterns | Strategy | Reviewers | Tools + targets | Full map | — |
-| /test-and-develop | Review rules | Test env | Test infra | Full strategy | Reviewers | — | Coverage map | Test Mgmt (Xray) |
-| /deploy-and-validate | Full SDLC | All envs | CI/CD patterns | Env data | Platform team | Full setup | — | Artifacts, Change Mgmt, Comms |
-| /release | Change mgmt | Prod access | — | — | Release authority | Monitoring | — | All (close stories, publish evidence) |
+| Loop | SDLC | Envs | Codebase | Test Data | Team | Observability | Tech Debt | Systems of Record | Governance |
+|---|---|---|---|---|---|---|---|---|---|
+| /refine | — | — | — | — | Product contact | — | Known risks | Requirements (Jira) | — |
+| /spike | — | Sandbox | Existing patterns | — | Tech lead | — | Fragile areas | — | — |
+| /design | — | Target arch | Full patterns | Strategy | Reviewers | Tools + targets | Full map | — | ✅ Must be configured |
+| /test-and-develop | Review rules | Test env | Test infra | Full strategy | Reviewers | — | Coverage map | Test Mgmt (Xray) | ✅ Must be configured |
+| /deploy-and-validate | Full SDLC | All envs | CI/CD patterns | Env data | Platform team | Full setup | — | Artifacts, Change Mgmt, Comms | ✅ Must be configured |
+| /release | Change mgmt | Prod access | — | — | Release authority | Monitoring | — | All (close stories, publish evidence) | ✅ Must be configured |
 
 ## SDLC → Definition of Ready & Definition of Done (Automatic Enhancement)
 

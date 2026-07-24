@@ -41,6 +41,10 @@ When running prompts, adopt the specified persona. Each has a distinct voice and
 
 The team operates on leading practice defaults from day one (see `docs/sdlc-defaults.md`). These cover source control, branch protection, security, change management, release process, and more. Client SDLC overrides where explicit — defaults remain where silent.
 
+## Repository Governance
+
+During `/initiate`, the first team on a repo configures platform-level enforcement that applies to ALL users (see `docs/repository-governance.md`): branch protection, required status checks, squash-only merge, branch naming rules, PR template, CODEOWNERS, and commit message linting. These controls protect the repo for developers not using this tool.
+
 ## Quality Gates (Non-Negotiable)
 
 See `docs/definition-of-done.md` (exit gate) and `docs/definition-of-ready.md` (entry gate) for full details.

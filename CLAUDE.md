@@ -49,7 +49,7 @@ Three named workflows compose the loops differently:
 
 | Skill | Purpose |
 |---|---|
-| `/initiate` | Capture engagement context (SDLC, environments, codebase, team, test data, observability) |
+| `/initiate` | Capture engagement context (SDLC, environments, codebase, team, test data, observability) + configure repository governance |
 | `/ingest` | Bootstrap from DiscoveryAccelerator or refresh with updates |
 | `/challenge` | Feed implementation learnings back to discovery team |
 
@@ -77,6 +77,10 @@ Every loop, before starting substantive work, checks for required engagement con
 - `observability.md` — Monitoring tools, alerting, SLOs, log/trace/metric standards
 - `systems-of-record.md` — External systems (Jira, Xray, Artifactory, etc.), sync direction, integration
 - `tech-debt.md` — Known risks, fragile areas, low coverage zones (grows over iterations)
+
+**Repository governance** (configured during `/initiate`, enforced at platform level):
+- Branch protection, required status checks, merge method, branch naming — see `docs/repository-governance.md`
+- The first team on a repo sets this up for ALL users (AI-assisted or not)
 
 **Stated assumptions** (from "skip") are tracked and must be validated before `/release`. An assumption that reaches production without validation is a risk SM must flag.
 
