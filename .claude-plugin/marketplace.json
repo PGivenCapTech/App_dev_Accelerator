@@ -16,7 +16,8 @@
     "fix-defect",
     "refactor",
     "ingest",
-    "challenge"
+    "challenge",
+    "demo"
   ],
   "agents": [
     "sm-scrummaster",

@@ -148,3 +148,4 @@ When the user references these terms, route to the corresponding prompt:
 - **challenge**, **wrong assumption**, **feed back to discovery** → `challenge.prompt.md`
 - **initiate**, **setup**, **SDLC**, **engagement**, **onboard** → `initiate.prompt.md`
 - **bootstrap**, **new project**, **scaffold**, **create team repo**, **stand up** → `bootstrap.prompt.md`
+- **demo**, **showcase**, **present**, **show stakeholders**, **sprint review** → `demo.prompt.md`

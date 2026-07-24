@@ -42,6 +42,7 @@ Three named workflows compose the loops differently:
 | `/test-and-develop` | Build the code — XP pairing + TDD | Paul + Dmitri pair, User navigates every cycle |
 | `/deploy-and-validate` | Push through environments, validate each | Loop back on failure, User approves promotions |
 | `/release` | Production + feedback | Blue/green, smoke, iteration closure |
+| `/demo` | Showcase what's built | Audience-adaptive: technical, product, executive, client delivery |
 
 ## Initiation & Connection Skills
 
