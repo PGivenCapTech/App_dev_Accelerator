@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-compact-archive.sh",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-compact-archive.sh\"",
             "timeout": 30,
             "statusMessage": "Archiving session context before compaction..."
           }
@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/post-write-capture.sh",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/.claude/hooks/post-write-capture.sh\"",
             "async": true,
             "asyncTimeout": 5000,
             "statusMessage": "Capturing decision context..."
@@ -31,7 +31,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/post-bash-audit.sh",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/.claude/hooks/post-bash-audit.sh\"",
             "async": true,
             "asyncTimeout": 5000
           }
@@ -44,7 +44,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-bash-guard.sh",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-bash-guard.sh\"",
             "timeout": 10
           }
         ]
@@ -56,7 +56,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/stop-session-handoff.sh",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/.claude/hooks/stop-session-handoff.sh\"",
             "timeout": 30,
             "statusMessage": "Generating session handoff..."
           }
@@ -69,7 +69,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/prompt-inject-context.sh",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/.claude/hooks/prompt-inject-context.sh\"",
             "timeout": 10
           }
         ]
@@ -81,7 +81,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/notification-forward.sh",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/.claude/hooks/notification-forward.sh\"",
             "async": true,
             "asyncTimeout": 10000
           }
