@@ -223,6 +223,15 @@ Strategy: Container restart
 
 If no CI/CD pipeline exists, the team bootstraps one during the first feature's `/design` and `/test-and-develop` loops.
 
+## Leading Practices (`docs/leading-practices.md`)
+
+Practices learned through delivery that the team adopts going forward. See `docs/leading-practices.md` for the full list with rationale. Key practices:
+
+- **Regulatory-qualified domain terms** — prefix with regulatory body name (`oshaRecordable`, not `recordable`)
+- **Never skip process steps** — full flow (refine → design → develop) even when content feels obvious
+- **Apply /fix-defect for internal issues** — same rigor for bugs found during dev as in production
+- **SM answers persona-driven data questions** — derivable from discovery context, no need to block on User
+
 ## Conventions
 
 - Constructor injection (not field injection)
