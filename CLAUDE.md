@@ -43,6 +43,7 @@ Three named workflows compose the loops differently:
 | `/deploy-and-validate` | Push through environments, validate each | Loop back on failure, User approves promotions |
 | `/release` | Production + feedback | Blue/green, smoke, iteration closure |
 | `/demo` | Showcase what's built | Audience-adaptive: technical, product, executive, client delivery |
+| `/retro` | Inspect & adapt the operating model | Evidence-based proposals to change DoR, DoD, gates, loops, context |
 
 ## Initiation & Connection Skills
 

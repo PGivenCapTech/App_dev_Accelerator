@@ -17,7 +17,8 @@
     "refactor",
     "ingest",
     "challenge",
-    "demo"
+    "demo",
+    "retro"
   ],
   "agents": [
     "sm-scrummaster",
