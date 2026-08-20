@@ -169,6 +169,26 @@ The **Retro** loop is how the team improves itself. After each iteration (or on-
 
 **Output:** Specific automation or process change to reduce top waste category
 
+### 9. User Engagement & Steering Quality
+
+**SM reviews:**
+- At how many gates did the User accept the team's recommendation without modification?
+- At how many gates did the User redirect, modify, or reject?
+- Did the User initiate any scope changes, questions, or concerns unprompted?
+- Were approval gates surfacing real decisions, or were they rubber-stamp checkpoints?
+- Is the User actively shaping the work or passively accepting AI recommendations?
+
+**Evidence sources:**
+- Count of approval gates presented vs. accepted/modified/rejected
+- User-initiated messages that changed direction (not just "yes")
+- Points where User provided domain knowledge the team couldn't derive
+- Gates where User always said "yes" (candidate for simplification)
+- Features where User pushed back and the result was better for it
+
+**Why this matters:** AI-assisted teams can drift toward the AI driving all decisions while the human rubber-stamps. This is dangerous — the AI lacks business context, judgment about risk appetite, and awareness of organizational politics. A healthy ratio means the User is genuinely steering, not just approving. If engagement drops below 10%, SM should proactively surface harder decisions to the User rather than resolving them internally.
+
+**Output:** Adjustment to approval gates (simplify low-value ones, add gates at real decision points), or escalation to User that their engagement is too low/high
+
 ## The Retro Process
 
 ```
@@ -222,8 +242,11 @@ The **Retro** loop is how the team improves itself. After each iteration (or on-
 Date: [date]
 Features completed: [list]
 Scope: [full / focused on X]
+Sessions: [number of context windows this iteration spanned]
 
-## Token Burn Analysis
+## Iteration Metrics
+
+### Token Efficiency
 
 | Category | Est. % of Tokens | Root Cause | Preventable? |
 |---|---|---|---|
@@ -236,7 +259,111 @@ Scope: [full / focused on X]
 
 **Efficiency ratio:** [productive %] of tokens delivered value.
 **Top waste:** [single biggest non-productive category and its root cause].
-**Action:** [specific change that would prevent the top waste next time].
+
+### Refinement-to-Rework Ratio
+
+| Metric | Value |
+|---|---|
+| Items that passed DoR | [N] |
+| Items requiring mid-build clarification or scope change | [N] |
+| Rework ratio | [N/N = %] |
+| "Wait, we didn't think about X" moments | [count, list briefly] |
+
+**Target:** <20% rework ratio. Above 20% = DoR is not catching enough.
+
+### Test-to-Green Ratio
+
+| Feature/Scenario | Test Runs to Green | Root Cause of Failures |
+|---|---|---|
+| [Scenario name] | [N] | [underspecified contract / environment / state pollution / real bug] |
+
+**Average:** [N:1]. **Target:** <2:1.
+
+### Regression Introduction Rate
+
+| Metric | Value |
+|---|---|
+| Features added this iteration | [N] |
+| Full-suite breaks caused by new features | [N] |
+| Regression rate | [N/N = %] |
+| Root causes | [list: state pollution, schema drift, missing reset, etc.] |
+
+**Target:** 0%. Any non-zero value gets a root-cause action item.
+
+### Ceremony-to-Automation Conversion
+
+| Metric | Value |
+|---|---|
+| Manual ceremonies identified (cumulative all iterations) | [N] |
+| Manual ceremonies automated (cumulative) | [N] |
+| Conversion rate | [%] |
+| New ceremonies identified this iteration | [list] |
+| Ceremonies automated this iteration | [list] |
+
+**Process debt = identified - automated.** Should trend toward zero.
+
+### Context Window Utilization
+
+| Metric | Value |
+|---|---|
+| Sessions (context windows) this iteration | [N] |
+| Features completed | [N] |
+| Sessions per feature | [ratio] |
+| Re-orientation events (re-reading same files, re-deriving same decisions) | [count] |
+
+**Target:** ≤2 sessions per feature. Higher = break features smaller or improve handoff.
+
+### Cycle Time by Phase
+
+| Phase | Est. % of Effort | Expected | Delta |
+|---|---|---|---|
+| /refine | [%] | 10% | [+/-] |
+| /design | [%] | 10% | [+/-] |
+| /test-and-develop (productive) | [%] | 60% | [+/-] |
+| /test-and-develop (debugging) | [%] | 5% | [+/-] |
+| /deploy-and-validate | [%] | 10% | [+/-] |
+| Unplanned work (not in any loop) | [%] | 5% | [+/-] |
+
+**If debugging > productive implementation → systemic isolation problem.**
+
+### User Engagement
+
+| Metric | Value |
+|---|---|
+| Approval gates presented to User | [N] |
+| User accepted without modification | [N] |
+| User modified/redirected | [N] |
+| User rejected/pushed back | [N] |
+| User-initiated scope changes | [N] |
+| User-initiated questions or concerns | [N] |
+| Engagement ratio (modified + rejected + initiated) / total gates | [%] |
+
+**What this measures:** Is the User actively steering, or passively accepting recommendations? A healthy team has the User adjusting 20-40% of proposals. Below 10% suggests rubber-stamping (gates aren't surfacing real decisions). Above 60% suggests the team is misaligned with User expectations.
+
+| Engagement Level | Ratio | Interpretation |
+|---|---|---|
+| Highly engaged | 30-50% | User is actively shaping the work — ideal |
+| Engaged | 20-30% | Team is mostly aligned, User steers at key moments |
+| Passive | 10-20% | User may be trusting too much or disengaged — probe |
+| Rubber-stamping | <10% | Gates aren't surfacing real decisions — simplify or escalate |
+| Misaligned | >60% | Team proposals consistently miss — improve discovery/refinement |
+
+## Historical Trend (update each retro)
+
+_Copy this iteration's metrics into `docs/retros/metrics-history.md` to track trends._
+
+| Metric | Iter 1 | Iter 2 | Iter 3 | ... | Trend |
+|---|---|---|---|---|---|
+| Token efficiency ratio | — | — | [%] | | ↑↓→ |
+| Refinement-to-rework ratio | — | — | [%] | | ↑↓→ |
+| Test-to-green ratio | — | — | [N:1] | | ↑↓→ |
+| Regression introduction rate | — | — | [%] | | ↑↓→ |
+| Ceremony automation conversion | — | — | [%] | | ↑↓→ |
+| Sessions per feature | — | — | [N] | | ↑↓→ |
+| Debugging % of cycle time | — | — | [%] | | ↑↓→ |
+| User engagement ratio | — | — | [%] | | ↑↓→ |
+
+**Arrows:** ↑ = improving, ↓ = degrading, → = stable. Flag any metric that degrades two iterations in a row.
 
 ## KEEP (Validated — Working Well)
 
@@ -280,6 +407,31 @@ Scope: [full / focused on X]
 | Updated engagement context | docs/engagement/[area].md | [sha] |
 ```
 
+## Historical Metrics Tracking
+
+Every retro appends its metrics to `docs/retros/metrics-history.md`. This file is the team's memory — it shows whether process changes are working or whether the same problems keep recurring.
+
+**SM is responsible for:**
+1. Copying this iteration's metric values into the history file
+2. Calculating trend arrows (↑ improving, ↓ degrading, → stable)
+3. Flagging any metric that degrades two iterations in a row (requires an action item)
+4. Noting which process changes correlate with metric improvements
+
+**What to track historically:**
+
+| Metric | Source | Healthy | Warning |
+|---|---|---|---|
+| Token efficiency ratio | Token Burn Analysis | >60% | <40% |
+| Refinement-to-rework ratio | Items reworked / items built | <20% | >30% |
+| Test-to-green ratio | Avg test runs to pass | <2:1 | >4:1 |
+| Regression introduction rate | Suite breaks / features added | 0% | >20% |
+| Ceremony automation conversion | Automated / identified | >80% | <50% |
+| Sessions per feature | Context windows / features | ≤2 | >4 |
+| Debugging % of cycle time | Debug effort / total effort | <10% | >25% |
+| User engagement ratio | (modified + rejected + initiated) / total gates | 20-40% | <10% or >60% |
+
+**Two-iteration degradation rule:** If any metric worsens for two consecutive iterations, SM must escalate it as a retro action item with root-cause analysis. The team cannot allow silent degradation.
+
 ## Rules
 
 - **Evidence-based only** — no observation without proof it happened
@@ -287,6 +439,7 @@ Scope: [full / focused on X]
 - **User approves every change** — the team proposes, the User decides
 - **Applied immediately** — approved changes are committed before the next iteration starts
 - **Cumulative** — retro history in `docs/retros/` shows evolution over time
+- **Metrics are longitudinal** — every retro updates `docs/retros/metrics-history.md`; trends matter more than individual values
 - **No sacred cows** — any process element can be challenged (including approval gates, DoR criteria, loop structure)
 - **Keep is as important as Change** — explicitly validating what works prevents drift
 
