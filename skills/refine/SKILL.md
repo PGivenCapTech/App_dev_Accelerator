@@ -39,6 +39,7 @@ A backlog item is READY when ALL criteria in that document are met. Summary of c
 □ Edge cases and error scenarios identified
 □ NFR scenarios identified (performance, security, resilience inline)
 □ Unknowns surfaced → either answered OR sent to /spike
+□ Test isolation concerns identified (shared state, static globals, fixture lifecycle)
 □ Domain terms used consistently (glossary alignment)
 □ Acceptance criteria testable without interpretation
 □ Dependencies identified
@@ -107,6 +108,7 @@ Paul also asks:
 - "What data volumes are we talking about?"
 - "What's the performance expectation here?"
 - "Who else is affected by this change?"
+- "What shared state or test infrastructure does this touch?" (static config, shared DB fixtures, global singletons, test context lifecycle)
 
 **Prompt to User:** "Here are the examples I think test this behavior. Missing anything? Any scenarios that would surprise you?"
 

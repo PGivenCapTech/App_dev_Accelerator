@@ -55,10 +55,24 @@ For each: Dmitri proposes approach, Paul states how to verify.
 
 Ask User: "Acceptable approach?"
 
-### 5. User Approves
+### 5. Test Design (Paul + Dmitri co-own)
+
+Test architecture decisions are as load-bearing as production architecture. Non-obvious shared state causes silent cross-test pollution that is expensive to debug.
+
+- **Isolation**: Shared state risks (static globals, singletons, mutable config)? Reset strategy?
+- **Fixtures**: New test data needed? Lifecycle (per-test, per-class, shared)?
+- **Infrastructure**: New extensions, base classes, custom matchers needed?
+- **Content negotiation**: Multiple output formats to test (JSON, CSV, XML)?
+- **Snapshot/contract**: OpenAPI or schema regeneration needed?
+- **Integration boundaries**: External deps to stub, DB schema changes, event verification?
+
+Ask User: "Test approach sound?"
+
+### 6. User Approves
 - Approved → ready for test-and-develop
 - Concerns → loop, address specific issue
 - Too complex → simplify or split feature
+- Test design incomplete → address before exit
 
 ## Design Artifacts to Produce
 
@@ -109,4 +123,5 @@ backlog/ready/<feature-slug>/
   api-contract.md         — Endpoint specifications
   component-diagram.md    — Component structure + interfaces
   nfr-strategy.md         — How NFR targets will be met + tested
+  test-design.md          — Test isolation, fixtures, infrastructure, integration boundaries
 ```

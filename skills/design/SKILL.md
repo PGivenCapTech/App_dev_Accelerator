@@ -63,10 +63,18 @@ If ANY required context is missing → prompt User (see `/initiate` gap-fill pro
 │     - Dmitri: "Here's the resilience strategy"  │
 │     User: "Acceptable approach?"                │
 │                                                 │
-│  5. User approves design                        │
+│  5. Test design (Paul + Dmitri co-own)          │
+│     - Test isolation: shared state risks?       │
+│     - Fixtures: new test data, lifecycle?       │
+│     - Infrastructure: extensions, base classes? │
+│     - Content negotiation / output formats?     │
+│     User: "Test approach sound?"                │
+│                                                 │
+│  6. User approves design                        │
 │     □ Approved → exit, ready for /test-and-develop│
 │     □ Concerns → loop, address specific issue   │
 │     □ Too complex → simplify or split feature   │
+│     □ Test design incomplete → address before exit│
 └─────────────────────────────────────────────────┘
 ```
 
@@ -134,6 +142,32 @@ Resilience:
   - Paul verifies: [resilience scenario from feature.md]
 ```
 
+### Test Design (Paul + Dmitri co-own)
+
+Test architecture decisions are as load-bearing as production architecture. Non-obvious shared state (static fields, singleton config, thread-local context) causes silent cross-test pollution that is expensive to debug. Design the test strategy explicitly.
+
+```
+Isolation:
+  - Shared state risks: [static globals, singletons, mutable class-level config]
+  - Reset strategy: [extension, base class @BeforeEach, per-test cleanup]
+  - Cross-test pollution vectors: [DB state, static config, event bus, caches]
+
+Fixtures:
+  - New test data needed: [entities, seed data, factory methods]
+  - Fixture lifecycle: [per-test, per-class, shared across suite]
+  - Builder/factory: [new builders needed, existing ones to extend]
+
+Infrastructure:
+  - New test utilities: [extensions, base classes, custom matchers]
+  - Content negotiation: [JSON default, CSV/XML via Accept header — test both]
+  - Snapshot/contract tests: [OpenAPI regeneration needed?]
+
+Integration boundaries:
+  - External dependencies to stub: [interfaces, WireMock, Testcontainers]
+  - Database: [schema changes, new tables, migration needed?]
+  - Event verification: [capture published events, assert contents]
+```
+
 ## Outputs
 
 ```
@@ -143,6 +177,7 @@ backlog/ready/<feature-slug>/
   api-contract.md         — Endpoint specifications
   component-diagram.md    — Component structure + interfaces
   nfr-strategy.md         — How NFR targets will be met + tested
+  test-design.md          — Test isolation, fixtures, infrastructure, integration boundaries
 ```
 
 ## Invocation

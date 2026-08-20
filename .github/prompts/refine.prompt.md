@@ -33,6 +33,7 @@ Propose concrete Given/When/Then scenarios:
 - Happy path with specific data
 - Edge cases and error scenarios
 - Boundary conditions
+- Test isolation: "What shared state or test infrastructure does this touch?" (static config, shared DB fixtures, global singletons, test context lifecycle)
 
 Ask User: "Missing anything? Any scenarios that would surprise you?"
 
