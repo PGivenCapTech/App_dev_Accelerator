@@ -27,7 +27,7 @@ The **Retro** loop is how the team improves itself. After each iteration (or on-
 | **Facilitator** | SM | Structures the retro, tracks actions, enforces follow-through |
 | **Process** | Igor | DoR effectiveness, refinement quality, scenario clarity |
 | **Quality** | Paul | DoD effectiveness, test strategy, coverage value, NFR targeting |
-| **Technical** | Dmitri | Loop handoffs, tooling friction, environment/pipeline issues |
+| **Technical** | Dmitri | Loop handoffs, tooling friction, environment/pipeline issues, token efficiency |
 | **Navigator** | User | Approves changes, provides perspective the agents can't see |
 
 ## What Gets Reviewed
@@ -141,6 +141,34 @@ The **Retro** loop is how the team improves itself. After each iteration (or on-
 
 **Output:** Calibration notes for next iteration planning
 
+### 8. Token Efficiency & Waste
+
+**SM + Dmitri review:**
+- What percentage of tokens delivered productive value (implementation, design, testing)?
+- What consumed tokens without delivering value (debugging, re-orientation, ceremony, rework)?
+- Was the top waste category preventable? What specific change would prevent it next iteration?
+- Did context compaction cause rework (re-reading files, re-deriving decisions)?
+- Were there repeated manual ceremonies that should be automated (snapshot regeneration, boilerplate setup)?
+
+**Evidence sources:**
+- Session length vs. features completed (tokens-per-feature trend)
+- Debugging loops — how many cycles before root cause found?
+- Repeated tool calls for the same information (context loss indicator)
+- Manual steps performed identically more than twice (automation candidate)
+- Same bug class surfacing across multiple sessions (prevention failure)
+
+**Token burn categories:**
+| Category | Healthy | Warning | Action |
+|---|---|---|---|
+| Productive implementation | >60% | <40% | Process is adding too much overhead |
+| Debugging state pollution | <5% | >15% | Add isolation guards, better diagnostics |
+| Context loss / re-orientation | <10% | >20% | Better memory, docs, or session management |
+| Ceremony / boilerplate | <10% | >15% | Automate the repeated steps |
+| Rework from missed requirements | <5% | >10% | DoR gap — add criterion |
+| Exploration / dead ends | <15% | >25% | Better diagnostic heuristics |
+
+**Output:** Specific automation or process change to reduce top waste category
+
 ## The Retro Process
 
 ```
@@ -194,6 +222,21 @@ The **Retro** loop is how the team improves itself. After each iteration (or on-
 Date: [date]
 Features completed: [list]
 Scope: [full / focused on X]
+
+## Token Burn Analysis
+
+| Category | Est. % of Tokens | Root Cause | Preventable? |
+|---|---|---|---|
+| Productive implementation | [%] | N/A — value delivery | No |
+| Debugging state pollution | [%] | [specific cause] | [Yes — how] |
+| Context loss / re-orientation | [%] | Session compaction, re-reading files | Partially — better memory/docs |
+| Ceremony / boilerplate | [%] | [repeated manual steps] | [Yes — automate] |
+| Rework from missed requirements | [%] | [what was missed in refinement] | [Yes — DoR gap] |
+| Exploration / dead ends | [%] | [wrong hypothesis pursued] | Partially — better diagnostics |
+
+**Efficiency ratio:** [productive %] of tokens delivered value.
+**Top waste:** [single biggest non-productive category and its root cause].
+**Action:** [specific change that would prevent the top waste next time].
 
 ## KEEP (Validated — Working Well)
 
