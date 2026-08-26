@@ -19,7 +19,7 @@ The **Bootstrap** skill creates a new team project repo that inherits methodolog
 │   ├── copilot-instructions.md      — Generated (references .accelerator/)
 │   └── prompts/                     — Symlinks to .accelerator/.github/prompts/
 ├── .claude/
-│   └── skills/                      — Symlinks to .accelerator/skills/
+│   └── skills -> .accelerator/.claude/skills/  — Directory symlink (auto-syncs)
 ├── CLAUDE.md                        — Generated (references .accelerator/)
 ├── docs/
 │   ├── definition-of-ready.md       — Copied from accelerator (team owns it now)
@@ -74,7 +74,7 @@ git submodule add https://github.com/PGivenCapTech/App_dev_Accelerator.git .acce
 
 # Create directory structure
 mkdir -p .github/prompts
-mkdir -p .claude/skills
+mkdir -p .claude
 mkdir -p docs/engagement
 mkdir -p backlog/{ready,active,done}
 mkdir -p src
@@ -153,11 +153,8 @@ See `.accelerator/.github/copilot-instructions.md` for full team definition, pra
 ### 4. Create Symlinks
 
 ```bash
-# Skills (for Claude Code)
-for skill in .accelerator/skills/*/; do
-  name=$(basename "$skill")
-  ln -sf "../../.accelerator/skills/$name/SKILL.md" ".claude/skills/${name}.md"
-done
+# Skills (for Claude Code) — single directory symlink keeps all skills in sync
+ln -sf ../.accelerator/.claude/skills .claude/skills
 
 # Prompts (for Copilot)
 for prompt in .accelerator/.github/prompts/*.prompt.md; do
