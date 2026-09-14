@@ -99,6 +99,17 @@ The **Refactor** workflow restructures code without changing external behavior. 
 │     │   update to point to new locations)            │     │
 │     └────────────────────────────────────────────────┘     │
 │                                                            │
+│  4b. SYNC before commit (/sync)                            │
+│     ┌────────────────────────────────────────────────┐     │
+│     │ Dmitri: fetch remote, rebase, resolve conflicts│     │
+│     │ Paul: re-run full test suite after rebase      │     │
+│     │ → All tests still green after sync             │     │
+│     │ → If conflicts: User approves resolution       │     │
+│     │                                                │     │
+│     │ Dmitri: stage, commit, push to remote          │     │
+│     │ SM: confirm push succeeded                     │     │
+│     └────────────────────────────────────────────────┘     │
+│                                                            │
 │  5. VERIFY NFRs (Paul)                                     │
 │     ┌────────────────────────────────────────────────┐     │
 │     │ Run NFR test suite:                            │     │

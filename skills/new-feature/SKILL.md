@@ -53,6 +53,8 @@ All loops run in full with all gates:
 │                   ┌─────────────────────┐                   │
 │                   │ /deploy-and-validate │                   │
 │                   │                     │                   │
+│                   │ /sync + push        │                   │
+│                   │ /code-review gate   │                   │
 │                   │ dev → test → staging │                   │
 │                   │ validate each level  │                   │
 │                   │ User approves promos  │                   │

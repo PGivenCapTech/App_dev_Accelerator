@@ -36,6 +36,33 @@ If ANY required context is missing → prompt User (see `/initiate` gap-fill pro
 - Traceability = 100%
 - Coverage = 100%
 - SM confirms readiness
+- Branch synced with remote (/sync completed)
+- Code pushed to remote and PR created/updated
+
+## Code Review Gate (Before Merge)
+
+Before merging to main or promoting beyond dev:
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  /code-review (embedded gate)                            │
+│                                                          │
+│  SM: Request review from designated reviewer(s)          │
+│  SM: Wait for review feedback                            │
+│  SM: Triage findings → backlog items                     │
+│  SM: Route fixes through /refactor or /test-and-develop  │
+│  SM: Verify all findings addressed                       │
+│  Paul: All tests green after fixes                       │
+│                                                          │
+│  → User: "Review complete. All findings addressed.       │
+│    Approve merge to [target branch]?"                    │
+│  → User approves merge                                   │
+│                                                          │
+│  If reviewer approved without findings:                  │
+│    → Skip triage, proceed to merge approval              │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+```
 
 ## The Loop (Per Environment)
 

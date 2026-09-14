@@ -95,6 +95,16 @@ If ANY required context is missing → prompt User (see `/initiate` gap-fill pro
 │     □ Coverage 100%                                     │
 │     □ No orphan code                                    │
 │                                                          │
+│  10. SYNC before commit (/sync)                          │
+│     Dmitri: fetch remote, rebase, resolve conflicts     │
+│     Paul: re-run full test suite after rebase           │
+│     → All tests still green after sync                  │
+│     → If conflicts: User approves resolution            │
+│                                                          │
+│  11. Commit and push                                     │
+│     Dmitri: stage, commit, push to remote               │
+│     SM: confirm push succeeded                          │
+│                                                          │
 └──────────────────────────────────────────────────────────┘
 ```
 
