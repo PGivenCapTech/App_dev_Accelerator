@@ -99,9 +99,4 @@ ${CONTENT_PREVIEW}
 EOF
 
 # Return minimal output — don't clutter the session
-jq -n --arg cat "$CATEGORY" --arg path "$RELATIVE_PATH" '{
-  "hookSpecificOutput": {
-    "hookEventName": "PostToolUse",
-    "additionalContext": "Decision logged: " + $cat + " — " + $path
-  }
-}'
+jq -n --arg cat "$CATEGORY" --arg path "$RELATIVE_PATH" '{"hookSpecificOutput": {"hookEventName": "PostToolUse", "additionalContext": "Decision logged: \($cat) — \($path)"}}'

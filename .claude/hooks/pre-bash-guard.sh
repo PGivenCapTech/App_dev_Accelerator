@@ -35,13 +35,7 @@ BLOCKED_PATTERNS=(
 
 for pattern in "${BLOCKED_PATTERNS[@]}"; do
   if echo "$CMD" | grep -qE "$pattern"; then
-    jq -n --arg cmd "$CMD" --arg pattern "$pattern" '{
-      "hookSpecificOutput": {
-        "hookEventName": "PreToolUse",
-        "permissionDecision": "deny",
-        "permissionDecisionReason": "Blocked: destructive operation matching [" + $pattern + "]. Use a safer alternative or get explicit User approval first."
-      }
-    }'
+    jq -n --arg cmd "$CMD" --arg pattern "$pattern" '{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "Blocked: destructive operation matching [\($pattern)]. Use a safer alternative or get explicit User approval first."}}'
     exit 2
   fi
 done
@@ -54,13 +48,13 @@ if echo "$CMD" | grep -qE "^git commit"; then
   # Extract commit message from -m flag
   # Handle both single and double quotes, and heredoc style
   MSG=""
-  if echo "$CMD" | grep -qE '\-m "'; then
-    MSG=$(echo "$CMD" | grep -oP '(?<=-m ")[^"]+' | head -1)
+  if echo "$CMD" | grep -qE '\-m "\$\(cat'; then
+    # Heredoc style — extract the first non-EOF line
+    MSG=$(echo "$CMD" | sed -n '/EOF/,/EOF/{/EOF/!p;}' | head -1 | sed 's/^[[:space:]]*//')
+  elif echo "$CMD" | grep -qE '\-m "'; then
+    MSG=$(echo "$CMD" | sed 's/.*-m "//' | sed 's/".*//' | head -1)
   elif echo "$CMD" | grep -qE "\-m '"; then
-    MSG=$(echo "$CMD" | grep -oP "(?<=-m ')[^']+" | head -1)
-  elif echo "$CMD" | grep -qP '\-m "\$\(cat'; then
-    # Heredoc style — extract the first line after EOF
-    MSG=$(echo "$CMD" | grep -oP '(?<=EOF\n).*' | head -1)
+    MSG=$(echo "$CMD" | sed "s/.*-m '//" | sed "s/'.*//" | head -1)
   fi
 
   # If we extracted a message, validate it
@@ -76,13 +70,7 @@ if echo "$CMD" | grep -qE "^git commit"; then
         exit 0
       fi
 
-      jq -n --arg msg "$MSG" '{
-        "hookSpecificOutput": {
-          "hookEventName": "PreToolUse",
-          "permissionDecision": "deny",
-          "permissionDecisionReason": "Commit message does not follow convention.\n\nExpected: <type>(<scope>): <description>\nTypes: feat, fix, refactor, test, infra, docs, retro\nScope: scenario slug or area name\n\nGot: \"" + $msg + "\"\n\nExample: feat(user-onboarding): add email validation step"
-        }
-      }'
+      jq -n --arg msg "$MSG" '{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "Commit message does not follow convention.\n\nExpected: <type>(<scope>): <description>\nTypes: feat, fix, refactor, test, infra, docs, retro\nScope: scenario slug or area name\n\nGot: \"\($msg)\"\n\nExample: feat(user-onboarding): add email validation step"}}'
       exit 2
     fi
   fi

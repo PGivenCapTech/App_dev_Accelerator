@@ -48,7 +48,7 @@ WEBHOOK_URL="${CLAUDE_NOTIFY_WEBHOOK:-}"
 
 # Try to read webhook from engagement config if not in env
 if [[ -z "$WEBHOOK_URL" && -f "$PROJECT_DIR/docs/engagement/team.md" ]]; then
-  WEBHOOK_URL=$(grep -i "webhook.*http" "$PROJECT_DIR/docs/engagement/team.md" 2>/dev/null | grep -oP 'https?://[^\s]+' | head -1 || true)
+  WEBHOOK_URL=$(grep -i "webhook.*http" "$PROJECT_DIR/docs/engagement/team.md" 2>/dev/null | grep -oE 'https?://[^[:space:]]+' | head -1 || true)
 fi
 
 if [[ -n "$WEBHOOK_URL" ]]; then
@@ -71,18 +71,7 @@ if [[ -n "$WEBHOOK_URL" ]]; then
       --arg msg "$MESSAGE" \
       --arg branch "$BRANCH" \
       --arg urgency "$URGENCY" \
-      '{
-        text: "[" + $urgency + "] " + $title,
-        blocks: [
-          {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: "*" + $title + "*\n" + $msg + "\n_Branch: " + $branch + "_"
-            }
-          }
-        ]
-      }')" >/dev/null 2>&1 || true
+      '{"text": "[\($urgency)] \($title)", "blocks": [{"type": "section", "text": {"type": "mrkdwn", "text": "*\($title)*\n\($msg)\n_Branch: \($branch)_"}}]}')" >/dev/null 2>&1 || true
 fi
 
 # --- macOS notification (local development) ---
