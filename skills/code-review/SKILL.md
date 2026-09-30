@@ -27,6 +27,32 @@ The **Code Review** loop handles the full lifecycle of PR review feedback — fr
 | **Technical** | Dmitri | Assesses implementation effort, identifies root causes |
 | **Navigator** | User | Approves triage priorities, approves fix approach |
 
+## Execution Model (MANDATORY)
+
+**Three review dimensions means three agents.** A single agent simulating the other two review perspectives is NOT a comprehensive code review — it is one perspective wearing three hats.
+
+SM orchestrates /code-review by launching **separate agents** for each dimension:
+
+```
+Phase 1 — Independent review (parallel):
+  Agent: igor-product-owner   → Process review: blast radius assessment, related findings to batch, domain language compliance
+  Agent: paul-tester          → Quality review: test coverage gaps exposed by changes, assertion meaningfulness, missing edge case tests
+  Agent: dmitri-developer     → Technical review: implementation correctness, architecture alignment, root cause analysis, simplification opportunities
+
+Phase 2 — Cross-review (parallel):
+  Each agent reads the other two agents' findings and responds:
+  Igor reviews Paul's coverage gaps and Dmitri's technical findings for process implications
+  Paul reviews Igor's blast radius assessment and Dmitri's findings for testing implications
+  Dmitri reviews Igor's process findings and Paul's coverage gaps for implementation implications
+
+Phase 3 — SM synthesizes:
+  SM merges and deduplicates findings
+  SM categorizes by severity (critical/moderate/low)
+  SM presents consolidated review to User
+```
+
+**Anti-pattern:** Launching one agent to perform all three review dimensions. This produces one perspective's blind spots replicated across all dimensions.
+
 ## The Loop
 
 ```

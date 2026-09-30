@@ -30,6 +30,26 @@ The **Demo** loop produces a showcase of working software tailored to the audien
 | **Business value** | Igor | What problem it solves, for whom, what outcomes |
 | **Navigator** | User | Directs focus, identifies audience, approves output |
 
+## Execution Model (MANDATORY)
+
+**Three demo dimensions means three agents.** Each role prepares their section independently — a single agent writing all three sections produces a demo with one voice, not three compelling angles.
+
+SM orchestrates /demo by launching **separate agents** for preparation:
+
+```
+Phase 1 — Independent preparation (parallel):
+  Agent: dmitri-developer     → Technical depth: architecture decisions, live demo setup, endpoints, test data
+  Agent: paul-tester          → Quality evidence: test results, coverage metrics, NFR performance data
+  Agent: igor-product-owner   → Business narrative: problem → solution → outcome, persona value, stakeholder talking points
+
+Phase 2 — Cross-review (parallel):
+  Each agent reviews the other two agents' preparation for consistency and flow
+
+Phase 3 — SM synthesizes demo script + User reviews
+```
+
+**Anti-pattern:** One agent preparing all three demo dimensions. The result lacks genuine depth in any dimension.
+
 ## Core Principle: Working Software First
 
 **Every demo starts by showing the software working.** Not slides. Not diagrams. Not talking about what it does. Actually exercising it — real inputs, real outputs, real behavior.

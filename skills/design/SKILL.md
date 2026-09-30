@@ -36,6 +36,33 @@ If ANY required context is missing → prompt User (see `/initiate` gap-fill pro
 - All spikes resolved (no open unknowns)
 - `backlog/ready/<slug>/feature.md` exists with scenarios
 
+## Execution Model (MANDATORY)
+
+**Three perspectives means three agents.** A single agent simulating the other two roles is NOT a design workshop — it is one perspective wearing three hats. The value of FDD's "Design by Feature" comes from genuinely different viewpoints colliding.
+
+SM orchestrates /design by launching **separate agents** for each role:
+
+```
+Phase 1 — Independent design input (parallel):
+  Agent: dmitri-developer     → Component design, API contracts, event flows, data model, NFR strategy
+  Agent: paul-tester          → Testability assessment: "How will I test this? What interfaces do I need? What test infrastructure is missing?"
+  Agent: igor-product-owner   → Behavior validation: confirms design satisfies all refined scenarios, flags domain language issues
+
+Phase 2 — Cross-review (parallel):
+  Each agent reads the other two agents' Phase 1 output and responds:
+  Dmitri reviews Paul's testability concerns and Igor's behavior validation
+  Paul reviews Dmitri's component design and Igor's behavior validation
+  Igor reviews Dmitri's component design and Paul's testability assessment
+
+Phase 3 — SM synthesizes + User gates:
+  SM merges all input into the design artifact
+  SM presents to User for approval: "Approved to build?"
+```
+
+**Anti-pattern:** Launching one agent (e.g., dmitri-developer) and asking it to also assess testability and validate behavior. This produces one technical perspective simulating three roles, missing genuine testability gaps and scenario coverage issues.
+
+**Why this matters:** Design decisions that look clean from an architecture perspective may be untestable or may not satisfy all refined scenarios. Independent perspectives catch these gaps before implementation starts — when they're cheap to fix.
+
 ## The Loop
 
 ```

@@ -30,6 +30,33 @@ The **Retro** loop is how the team improves itself. After each iteration (or on-
 | **Technical** | Dmitri | Loop handoffs, tooling friction, environment/pipeline issues |
 | **Navigator** | User | Approves changes, provides perspective the agents can't see |
 
+## Execution Model (MANDATORY)
+
+**Three perspectives means three agents.** A single agent simulating the other two roles is NOT a retrospective — it is one perspective wearing three hats. The value of a retro comes from genuinely different role-specific observations colliding.
+
+SM orchestrates /retro by launching **separate agents** for each role:
+
+```
+Phase 1 — Independent retrospective input (parallel):
+  Agent: igor-product-owner  → Process observations (DoR effectiveness, refinement quality, scenario clarity)
+  Agent: paul-tester          → Quality observations (DoD effectiveness, test strategy, coverage value, NFR targeting)
+  Agent: dmitri-developer     → Technical observations (loop handoffs, tooling friction, environment/pipeline issues)
+
+Phase 2 — Cross-review (parallel):
+  Each agent reads the other two agents' Phase 1 input and responds:
+  Igor reviews Paul's quality observations and Dmitri's technical observations
+  Paul reviews Igor's process observations and Dmitri's technical observations
+  Dmitri reviews Igor's process observations and Paul's quality observations
+
+Phase 3 — SM synthesizes + User gates:
+  SM merges all input into the retrospective artifact
+  SM presents findings, proposed changes, and action items to User for approval
+```
+
+**Anti-pattern:** Launching one agent and asking it to write observations from all three perspectives. This produces one viewpoint simulating three, not three genuine viewpoints.
+
+**Why this matters:** Sprint 2 proved that retrospective input from a single perspective misses role-specific observations. When the User asked "did we ask the other team members for their input?", the retro had to be re-run with genuine multi-agent participation, surfacing observations the initial single-perspective run missed entirely.
+
 ## What Gets Reviewed
 
 ### 1. Definition of Ready Effectiveness

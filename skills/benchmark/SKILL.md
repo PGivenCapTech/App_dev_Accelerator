@@ -28,6 +28,26 @@ If ANY required context is missing → prompt User (see `/initiate` gap-fill pro
 | **Scenario designer** | Paul | Defines scenarios, thresholds, kill criteria, validates measurement methodology |
 | **Navigator** | User | Approves targets, reviews results, makes go/no-go call |
 
+## Execution Model (MANDATORY)
+
+**Two benchmark roles means two agents.** The scenario designer (Paul) and harness builder (Dmitri) must work independently — Paul defines WHAT to measure and the pass/fail criteria, Dmitri builds HOW to measure it.
+
+SM orchestrates /benchmark by launching **separate agents**:
+
+```
+Phase 1 — Contract definition:
+  Agent: paul-tester          → Defines scenarios, thresholds, kill criteria, validates measurement methodology
+
+Phase 2 — Harness build (after User approves contract):
+  Agent: dmitri-developer     → Builds reproducible benchmark harness, instruments measurement
+
+Phase 3 — Cross-review:
+  Paul reviews Dmitri's harness: "Does this measure what I specified?"
+  Dmitri reviews Paul's thresholds: "Are these achievable given the architecture?"
+```
+
+**Anti-pattern:** One agent defining scenarios AND building the harness. The person who decides "what's fast enough" should not be the same person building the measurement tool — it creates incentive alignment problems.
+
 ## Benchmark Contract (Entry Criteria)
 
 Every benchmark starts with a contract — approved by User before measurement begins:

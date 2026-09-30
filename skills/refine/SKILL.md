@@ -48,6 +48,34 @@ A backlog item is READY when ALL criteria in that document are met. Summary of c
 
 **Plus** any SDLC-derived and engagement-specific criteria from `docs/definition-of-ready.md`.
 
+## Execution Model (MANDATORY)
+
+**Three Amigos means three agents.** A single agent simulating the other two roles ("Igor voice", "Paul voice") is NOT refinement — it is one perspective wearing three hats. The value of Three Amigos comes from genuinely different viewpoints colliding.
+
+SM orchestrates /refine by launching **separate agents** for each role:
+
+```
+Phase 1 — Independent perspectives (parallel):
+  Agent: igor-product-owner  → Scenarios + domain language review
+  Agent: paul-tester          → Test strategy + testability validation + examples
+  Agent: dmitri-developer     → Feasibility assessment + technical risks
+
+Phase 2 — Cross-review (parallel):
+  Each agent reads the other two agents' Phase 1 output and responds:
+  Igor reviews Paul's test strategy and Dmitri's feasibility
+  Paul reviews Igor's scenarios and Dmitri's feasibility
+  Dmitri reviews Igor's scenarios and Paul's test strategy
+
+Phase 3 — SM synthesizes + User gates:
+  SM merges all input into the refinement artifact
+  SM checks Definition of Ready
+  SM presents to User for approval
+```
+
+**Anti-pattern:** Launching one agent (e.g., paul-tester) and asking it to write "Igor voice" and "Dmitri voice" sections. This produces one perspective simulating three, not three genuine perspectives. SM must never do this.
+
+**Why this matters:** Sprint 2 proved it. When platform stories (2.1-2.4) had genuine cross-review during refinement, there was zero requirement rework. When dashboard stories (TD.8/TD.9) had a single perspective, retroactive validation found three functional gaps.
+
 ## The Loop
 
 ```
