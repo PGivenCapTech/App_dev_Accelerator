@@ -28,6 +28,10 @@ These represent the team's baseline for what "ready to build" means.
 | 8 | Dependencies identified and unblocked | Dmitri |
 | 9 | Effort estimate agreed (S/M/L) | Team |
 | 10 | User approves: "This is ready to design" | User |
+| 11 | /refine completed — Igor scenarios + Paul test strategy + Dmitri implementation questions documented. No exceptions regardless of perceived simplicity. | SM (gate enforcement) |
+| 12 | Test automation approach specified — GWT capture mechanism identified, no TODO stubs in test infrastructure, data factory requirements documented | Paul |
+| 13 | Integration strategy documented — for stories involving external APIs, the story specifies: mock vs. live, stub contract source, and how integration will be verified | Dmitri + Paul |
+| 14 | Scope alignment verified — story traces to an in-scope product line. Stories referencing out-of-scope products are blocked until scope is clarified with User. | Igor + SM |
 
 ## SDLC-Derived Criteria
 

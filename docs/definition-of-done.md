@@ -72,6 +72,59 @@ These cannot be removed or weakened. They represent the baseline quality the acc
 
 **If coverage < 100% → deployment is blocked. No exceptions.**
 
+### 5. Cross-Review Completed
+
+| Rule | Verification |
+|---|---|
+| Igor validates domain language and scenario alignment | SM verifies cross-review evidence |
+| Paul validates test quality, coverage strategy, and assertion meaningfulness | SM verifies cross-review evidence |
+| Dmitri validates implementation correctness, architecture, and maintainability | SM verifies cross-review evidence |
+| All three perspectives documented before story is marked done | SM review |
+
+**If cross-review is not completed → deployment is blocked. No exceptions.**
+
+### 6. Code Review Completed
+
+| Rule | Verification |
+|---|---|
+| Formal code review using `/code-review` skill run on story diff | SM verifies review ran |
+| Static analysis, security, correctness, and pattern adherence checked | `/code-review` output |
+| Critical and moderate findings resolved before commit | SM review of findings |
+| Low findings addressed inline or documented with rationale | SM review |
+
+**If code review is not completed → deployment is blocked. No exceptions.**
+
+### 7. Per-Story Commits
+
+| Rule | Verification |
+|---|---|
+| Each story committed separately with story ID in commit message | SM reviews git log |
+| Commit message format: `type(scope): description (story-id)` | SM review |
+| No monolithic multi-story commits | SM reviews git log at sprint close |
+| Commit serves as context compression point and traceability anchor | SM review |
+
+**If stories are not committed individually → deployment is blocked. No exceptions.**
+
+### 8. Service Size Gate
+
+| Rule | Verification |
+|---|---|
+| Production classes stay under 200 lines | Automated check or SM review |
+| Multi-concern services decomposed before merge, not deferred | SM review during /test-and-develop |
+| Measured on non-test, non-config source files | Automated check |
+
+**If any production class exceeds 200 lines → deployment is blocked. No exceptions.**
+
+### 9. Browser Smoke Test (UI Stories)
+
+| Rule | Verification |
+|---|---|
+| User-visible flows verified in running browser with services up | Paul + Dmitri verification |
+| Verification runs against Docker or deployed environment, not just code tests | SM reviews evidence |
+| Issues found during verification fixed and regression-tested | SM review |
+
+**If user-visible flows are not browser-verified → deployment is blocked. No exceptions.**
+
 ## Verification Summary
 
 All criteria above are verified by automated scripts and CI gates:
@@ -125,13 +178,15 @@ _User: add your additional Done criteria below. Each becomes mandatory for all i
 <!--
 Examples of criteria you might add:
 
+- [ ] Dashboard/artifact JSON current — test counts match actual suite, coverage non-zero, aggregation fails on stale data
+- [ ] External integrations exercised live — Camunda workflows deployed, CMS content fetched in running environment, not just mocked
+- [ ] Accessibility (WCAG 2.1 AA) validated
 - [ ] Architecture review completed and approved by [name]
 - [ ] Security review signed off by AppSec team
 - [ ] Documentation updated in [wiki/confluence/etc.]
 - [ ] Demo recording created for stakeholders
 - [ ] Performance baseline updated post-deploy
 - [ ] Runbook updated for production support handoff
-- [ ] Accessibility (WCAG 2.1 AA) validated
 - [ ] API documentation (OpenAPI spec) current
 - [ ] Database migration reversible
 - [ ] Feature flag cleanup plan documented
