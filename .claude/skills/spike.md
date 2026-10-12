@@ -1,0 +1,1 @@
+../../skills/spike/SKILL.md

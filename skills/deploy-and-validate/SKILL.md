@@ -1,0 +1,220 @@
+---
+name: deploy-and-validate
+description: Deploy & Validate loop — push through environments (dev → test → staging), validate at each level, loop back if validation fails. User approves promotions.
+allowed-tools: [Read, Write, Edit, Bash, Agent]
+user-invocable: true
+---
+
+# /deploy-and-validate — Deploy & Validate Loop
+
+The **Deploy & Validate** loop pushes code through environments and validates at each level. If validation fails at any environment, the loop cycles back — fix, re-validate, then promote. User approves each promotion.
+
+## Context Check (Before Starting)
+
+Before starting deployment, verify:
+- `docs/engagement/sdlc-controls.md` — Full SDLC (change management, security gates, release windows)
+- `docs/engagement/environments.md` — All environments (access, provisioning, network, secrets)
+- `docs/engagement/codebase-patterns.md` — CI/CD patterns (existing pipeline structure)
+- `docs/engagement/observability.md` — Full monitoring setup (dashboards, alerts, thresholds)
+- `docs/engagement/team.md` — Platform team contacts, release authority
+- `docs/engagement/test-data.md` — Environment-specific data seeding
+
+If ANY required context is missing → prompt User (see `/initiate` gap-fill protocol).
+**Deploy is the most context-heavy loop — most gaps will surface here.**
+
+## Participants
+
+| Role | Agent | Contribution |
+|---|---|---|
+| **Pipeline** | Riley | CI/CD execution, environment provisioning, deployment automation, build artifact validation, rollback triggers |
+| **Infrastructure** | Dmitri | IaC, monitoring, observability, rollback logic |
+| **Validation** | Paul | Environment-specific test suites, quality gates |
+| **Navigator** | User | Approves each promotion, decides on failures |
+
+Riley LEADS deployment execution — validates build artifacts, Docker images, and environment health before Paul runs tests. Dmitri focuses on IaC and monitoring. Riley and Dmitri co-own rollback: Riley triggers, Dmitri monitors.
+
+## Entry Criteria
+
+- Feature completed /test-and-develop (all scenarios green)
+- Traceability = 100%
+- Coverage = 100%
+- SM confirms readiness
+- Branch synced with remote (/sync completed)
+- Code pushed to remote and PR created/updated
+
+## Code Review Gate (Before Merge)
+
+Before merging to main or promoting beyond dev:
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  /code-review (embedded gate)                            │
+│                                                          │
+│  SM: Request review from designated reviewer(s)          │
+│  SM: Wait for review feedback                            │
+│  SM: Triage findings → backlog items                     │
+│  SM: Route fixes through /refactor or /test-and-develop  │
+│  SM: Verify all findings addressed                       │
+│  Paul: All tests green after fixes                       │
+│                                                          │
+│  → User: "Review complete. All findings addressed.       │
+│    Approve merge to [target branch]?"                    │
+│  → User approves merge                                   │
+│                                                          │
+│  If reviewer approved without findings:                  │
+│    → Skip triage, proceed to merge approval              │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+```
+
+## The Loop (Per Environment)
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                                                         │
+│  For each environment: dev → test → staging             │
+│  ┌───────────────────────────────────────────────────┐  │
+│  │                                                   │  │
+│  │  1. Dmitri deploys to [environment]               │  │
+│  │     - Update IaC (CDK deploy)                    │  │
+│  │     - Deploy application artifact                │  │
+│  │     - Verify health checks                       │  │
+│  │     → User: "Deployed to [env]. Health: ✅"      │  │
+│  │                                                   │  │
+│  │  2. Paul validates in [environment]               │  │
+│  │     - Run environment-specific test suite        │  │
+│  │     - Check quality gates for this level         │  │
+│  │     → User: "Validation results: [summary]"     │  │
+│  │                                                   │  │
+│  │  3. Validation passed?                            │  │
+│  │     □ Yes → User approves promotion              │  │
+│  │       → User: "All gates pass. Promote to        │  │
+│  │         [next env]? Approve / Hold / Investigate" │  │
+│  │     □ No → diagnose and fix                      │  │
+│  │       → User: "[N] failures: [summary].          │  │
+│  │         Fix and re-validate? Or rollback?"       │  │
+│  │       → Fix loop:                                │  │
+│  │         Paul diagnoses failure                   │  │
+│  │         Dmitri fixes                             │  │
+│  │         Redeploy to same environment             │  │
+│  │         Re-validate (loop back to step 2)       │  │
+│  │                                                   │  │
+│  └───────────────────────────────────────────────────┘  │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+## Environment Validation Suites
+
+### Dev Environment
+```
+Dmitri deploys: auto on green build
+Paul validates:
+  □ Application starts successfully
+  □ Health endpoint responds
+  □ Smoke tests pass (critical paths)
+  □ Domain events publishing correctly
+  □ Database migrations applied cleanly
+```
+
+### Test Environment
+```
+Dmitri deploys: after dev validation passes
+Paul validates:
+  □ ALL BDD scenarios pass (full regression)
+  □ ALL integration tests pass
+  □ ALL unit tests pass (in CI, confirms no env-specific issues)
+  □ Coverage verified = 100%
+  □ Traceability verified = 100%
+  □ SAST security scan clean
+  □ NFR tests pass:
+    - Performance within thresholds
+    - Security scenarios pass
+    - Resilience scenarios pass
+```
+
+### Staging Environment
+```
+Dmitri deploys: after test validation + User approval
+Paul validates:
+  □ Smoke test suite (fast subset)
+  □ Performance baseline comparison (no regression)
+  □ Integration with external dependencies (real, not mocked)
+  □ Data migration on production-like data
+  □ Monitoring/alerting firing correctly
+```
+
+## Infrastructure by Strategy (see `docs/environment-strategy.md`)
+
+Check `docs/engagement/environments.md` for the selected strategy.
+
+### Local Strategy
+```
+Dev:     docker-compose up → run tests against containers
+Test:    docker-compose -f docker-compose.test.yml up → full suite
+Staging: N/A (or same as test with production-like data volume)
+Prod:    N/A — graduate to cloud/hybrid when ready
+```
+Quality gates still enforced (coverage, traceability, tests green). No promotion beyond test locally.
+
+### Cloud Strategy (AWS Default)
+
+| Resource | Dev (ephemeral) | Test | Staging |
+|---|---|---|---|
+| Compute | Fargate 0.5vCPU/1GB | Fargate 1vCPU/2GB | Fargate 2vCPU/4GB (prod mirror) |
+| Database | RDS t3.micro | RDS t3.small | RDS t3.medium, multi-AZ |
+| Events | EventBridge (shared) | EventBridge (isolated) | EventBridge (prod mirror) |
+| Monitoring | Basic CloudWatch | Enhanced + X-Ray | Full + Alarms |
+
+### Hybrid Strategy
+```
+Dev:     Docker Compose locally (each developer's machine, isolated)
+Test:    Cloud (shared) — deploy on PR merge via CI
+Staging: Cloud (shared) — User approval required
+Prod:    Cloud (shared) — User approval + all DoD gates
+```
+
+## Failure Handling
+
+When validation fails:
+
+```
+Paul: "Integration test X failed in [env]. Root cause: [diagnosis]."
+  → User: "Fix in place and re-validate, or roll back?"
+
+If fix:
+  Dmitri fixes code/config
+  Paul verifies fix locally
+  Dmitri redeploys to same environment
+  Paul re-runs validation suite
+  → Loop until green or User decides to roll back
+
+If rollback:
+  Dmitri reverts to previous known-good
+  Paul confirms previous version healthy
+  → User decides: fix in /test-and-develop loop or investigate further
+```
+
+## Outputs
+
+After each environment passes:
+
+```
+backlog/active/<slug>/
+  status.md              — "deployed to [env], validated"
+  deploy-log.md          — What was deployed where, when, validation results
+
+monitoring/
+  <env>-baseline.md      — Performance baseline for comparison
+```
+
+## Invocation
+
+```bash
+/deploy-and-validate                    — Deploy current feature through all environments
+/deploy-and-validate --to dev           — Deploy to dev only
+/deploy-and-validate --to test          — Promote to test (requires User approval)
+/deploy-and-validate --to staging       — Promote to staging (requires User approval)
+/deploy-and-validate --status           — Show current state per environment
+/deploy-and-validate --rollback <env>   — Rollback specified environment
+```
