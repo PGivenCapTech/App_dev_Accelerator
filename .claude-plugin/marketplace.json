@@ -1,0 +1,39 @@
+{
+  "name": "app-dev-accelerator",
+  "version": "0.3.0",
+  "description": "XP + BDD + FDD development team. Workflows: /new-feature, /fix-defect, /refactor. Loops: /refine, /spike, /design, /test-and-develop, /deploy-and-validate, /release. Setup: /bootstrap, /initiate. Connection: /ingest, /challenge. Enforces 100% traceability + coverage. Supports Claude Code + Copilot.",
+  "author": "CapTech",
+  "skills": [
+    "bootstrap",
+    "initiate",
+    "refine",
+    "spike",
+    "benchmark",
+    "design",
+    "design-composition",
+    "design-workflow",
+    "design-event-integration",
+    "design-authz",
+    "integrate-engine",
+    "test-and-develop",
+    "deploy-and-validate",
+    "release",
+    "new-feature",
+    "fix-defect",
+    "refactor",
+    "ingest",
+    "challenge",
+    "demo",
+    "retro"
+  ],
+  "agents": [
+    "sm-scrummaster",
+    "igor-product-owner",
+    "paul-tester",
+    "dmitri-developer"
+  ],
+  "upstream": {
+    "requires": "discovery-accelerator",
+    "connection": "/ingest links to DiscoveryAccelerator output"
+  }
+}
