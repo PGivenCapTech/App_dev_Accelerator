@@ -51,33 +51,49 @@ A backlog item is READY when ALL criteria in that document are met. Summary of c
 
 ## Execution Model (MANDATORY)
 
-**Four perspectives means four agents.** A single agent simulating other roles is NOT refinement — it is one perspective wearing multiple hats. The value of refinement comes from genuinely different viewpoints colliding.
+**Refinement is a collaborative conversation, not parallel work.** Each person's input builds on the previous. The value comes from genuinely different viewpoints reacting to each other — not three independent reports stapled together.
 
-SM orchestrates /refine by launching **separate agents** for each role:
+SM orchestrates /refine as a **sequential handoff** between agents:
 
 ```
-Phase 1 — Independent perspectives (parallel):
-  Agent: igor-product-owner  → Scenarios + domain language review
-  Agent: paul-tester          → Test strategy + testability validation + examples
-  Agent: dmitri-developer     → Feasibility assessment + technical risks
-  Agent: riley-devops         → Infrastructure assessment: CI/CD impacts, environment requirements, build dependency changes, Docker updates, deployment strategy
+Step 1 — Igor presents the story:
+  Agent: igor-product-owner
+  Igor reads the backlog item, examines codebase context and designs,
+  and presents: who, what, why, constraints, dependencies.
+  → Output: story presentation with proposed scope
 
-Phase 2 — Cross-review (parallel):
-  Each agent reads the other agents' Phase 1 output and responds:
-  Igor reviews Paul's test strategy, Dmitri's feasibility, and Riley's infrastructure assessment
-  Paul reviews Igor's scenarios, Dmitri's feasibility, and Riley's infrastructure assessment
-  Dmitri reviews Igor's scenarios, Paul's test strategy, and Riley's infrastructure assessment
-  Riley reviews Igor's scenarios, Paul's test strategy, and Dmitri's feasibility for infrastructure implications
+Step 2 — Paul proposes acceptance criteria (reacting to Igor):
+  Agent: paul-tester
+  Paul reads Igor's presentation and proposes Gherkin-based acceptance
+  criteria — happy path, edge cases, error scenarios, NFRs.
+  Paul challenges ambiguity and asks "what happens when...?"
+  → Output: draft Gherkin scenarios as acceptance criteria
 
-Phase 3 — SM synthesizes + User gates:
-  SM merges all input into the refinement artifact
-  SM checks Definition of Ready
-  SM presents to User for approval
+Step 3 — Dmitri assesses buildability (reacting to both):
+  Agent: dmitri-developer
+  Dmitri reads Igor's story AND Paul's acceptance criteria, then assesses:
+  - Is this buildable within a single context window (one dev session)?
+  - What's the technical approach? What exists, what's new?
+  - Any risks, unknowns, or infrastructure needs?
+  If NOT buildable in one context window → Dmitri proposes how to SPLIT
+  the story along acceptance criteria boundaries. Each split must be
+  independently deliverable with its own subset of Paul's scenarios.
+  → Output: feasibility assessment, technical approach, split recommendation if needed
+
+Step 4 — SM synthesizes + User gates:
+  SM compiles the conversation into the refinement artifact.
+  SM checks Definition of Ready.
+  SM presents to User with any open questions or decisions needed.
+  User steers: approves, adjusts, adds context, or sends back for more work.
 ```
 
-**Anti-pattern:** Launching one agent (e.g., paul-tester) and asking it to write "Igor voice" and "Dmitri voice" sections. This produces one perspective simulating three, not three genuine perspectives. SM must never do this.
+**Each step sees the output of all previous steps.** Igor's presentation informs Paul's scenarios. Paul's scenarios inform Dmitri's buildability assessment. This is sequential by design.
 
-**Why this matters:** Sprint 2 proved it. When platform stories (2.1-2.4) had genuine cross-review during refinement, there was zero requirement rework. When dashboard stories (TD.8/TD.9) had a single perspective, retroactive validation found three functional gaps.
+**Anti-pattern: Parallel launch.** Launching Igor, Paul, and Dmitri simultaneously produces three disconnected perspectives that don't react to each other. This is NOT refinement — it's three solo reports. SM must never do this.
+
+**Anti-pattern: Single agent simulation.** Launching one agent (e.g., paul-tester) and asking it to write "Igor voice" and "Dmitri voice" sections. This produces one perspective wearing multiple hats. SM must never do this.
+
+**Splitting rule:** If Dmitri says a story is too large, the split MUST follow acceptance criteria boundaries — each resulting story gets a coherent subset of Paul's Gherkin scenarios. Never split by technical layer (frontend/backend) — split by user-observable behavior.
 
 ## The Loop
 
